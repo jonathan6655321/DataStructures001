@@ -139,6 +139,7 @@ public class WAVLTree {
 		   if (rankDifference(node, node.left) == 1){
 			   rotateRight(node,parent);
 			   parent.demote();
+			   return 2;
 		   } 
 		   
 		   // (2,1) below node - 2 rotations case:
@@ -149,12 +150,14 @@ public class WAVLTree {
 			   climberNode.left.demote();
 			   climberNode.right.demote();
 			   climberNode.promote();
+			   return 5;
 		   }
 	   } else {
 		   // (2,1) below node - 1 rotation case:
 		   if (rankDifference(node, node.right) == 1){
 			   rotateLeft(parent, node);
 			   parent.demote();
+			   return 2;
 		   } 
 		   // (1,2) below node - 2 rotations case: 
 		   else if (rankDifference(node, node.right) == 2 ) {
@@ -164,10 +167,11 @@ public class WAVLTree {
 			   climberNode.left.demote();
 			   climberNode.right.demote();
 			   climberNode.promote();
+			   return 5;
 		   }
 	   }
 	   
-	   return 1; 
+	   return -5000; 
    }
    
    
@@ -196,12 +200,20 @@ public class WAVLTree {
     */
    
    public void rotateRight(WAVLNode child, WAVLNode parent) {
-	   child.parent = parent.parent;
-	   if (parent.isLeftChild()) {
-		   parent.parent.left = child;
-	   } else {
-		   parent.parent.right = child;
+	  System.out.println("I am rotating right!");
+	   
+	   if(root == parent) {
+		   child.parent = null;
+		   root = child;
+	   } else { 
+		   child.parent = parent.parent;
+		   if (parent.isLeftChild()) {
+			   parent.parent.left = child;
+		   } else {
+			   parent.parent.right = child;
+		   }		   
 	   }
+	   
 	   
 	   parent.left = child.right;
 	   if (child.right != null) {
@@ -209,17 +221,26 @@ public class WAVLTree {
 	   }
 	   
 	   child.right = parent;
-	   parent.parent =child;
+	   parent.parent = child;
 	   
    }
    
    public void rotateLeft(WAVLNode parent, WAVLNode child){
-	   child.parent = parent.parent;
-	   if (parent.isLeftChild()) {
-		   parent.parent.left = child;
+	  
+	   System.out.println("I am rotating left!");
+	   
+	   if(root == parent) {
+		   child.parent = null;
+		   root = child;
 	   } else {
-		   parent.parent.right = child;
+		   child.parent = parent.parent;
+		   if (parent.isLeftChild()) {
+			   parent.parent.left = child;
+		   } else {
+			   parent.parent.right = child;
+		   }		   
 	   }
+	   
 	   
 	   parent.right = child.left;
 	   if (child.left != null) {
