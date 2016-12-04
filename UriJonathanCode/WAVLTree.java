@@ -13,6 +13,11 @@ package UriJonathanCode;
 
 public class WAVLTree {
 
+	private WAVLNode root = null;
+	
+	public WAVLTree() {
+		root = null;
+	}
 	
   /**
    * public boolean empty()
@@ -21,7 +26,7 @@ public class WAVLTree {
    *
    */
   public boolean empty() {
-    return false; // to be replaced by student code
+    return (root == null);
   }
 
  /**
@@ -32,9 +37,19 @@ public class WAVLTree {
    */
   public String search(int k)
   {
-	return "42";  // to be replaced by student code
+	  if (root == null){
+		  return null;
+	  }
+	  
+	  WAVLNode foundNode = this.root.nodeSearch(k);
+	  if (foundNode.key == k ){
+		  return foundNode.info;
+	  }
+	  
+	  return null;  // to be replaced by student code
   }
 
+  
   /**
    * public int insert(int k, String i)
    *
@@ -44,9 +59,64 @@ public class WAVLTree {
    * returns -1 if an item with key k already exists in the tree.
    */
    public int insert(int k, String i) {
-	  return 42;	// to be replaced by student code
+	   
+	   WAVLNode newNode = new WAVLNode(k, i);
+	   
+	   // empty tree:
+	   if (this.root == null){
+		   this.root = newNode;
+	   }
+	  
+	   WAVLNode parentNode = this.root.nodeSearch(k);
+	   
+	   // node with key k already exists:
+	   if (parentNode.key == k) {
+		   return -1;
+	   }
+	   
+	   // found node is the parent of the node we are inserting
+	   if ( k > parentNode.key) {
+		   parentNode.right = newNode;
+	   } else {
+		   parentNode.left = newNode;
+	   }
+	   
+	   newNode.parent = parentNode;
+	   
+	   // rebalance: 
+	   
+	   //case B:
+	   if ((parentNode.right != null) && (parentNode.left != null)){
+		   return 0;
+	   }
+	   
+	   //case A: 
+	   rebalanceFrom(newNode);
+	   
+	   return 42;
    }
 
+   /*
+    * rebalances tree starting from given node
+    * assumes both subtrees of node are valid
+    * returns total number of rotations + promotions + 
+    */
+   public int rebalanceFrom(WAVLNode node) {
+	   
+	   // case 1:  
+
+	   
+	   
+	   //
+	   
+	   
+	   //
+	   
+	   return 1; // + ??
+   }
+   
+   
+   
   /**
    * public int delete(int k)
    *
@@ -129,7 +199,50 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
+	  
+	  public String info;
+	  public int key;
+	  public int rank = 0;
+	  
+	  public WAVLNode parent;
+	  public WAVLNode left;
+	  public WAVLNode right;
 
+	  public WAVLNode(int key, String info) {
+		  this.info = info;
+		  this.key = key;  
+	  }
+	  
+	  
+	  /*
+	   * recursively searches subtree starting from node
+	   * returns the node with the given key
+	   * or parent of that node if no node with such key exists
+	   */
+	  public WAVLNode nodeSearch(int key){
+		  
+		  if (key == this.key) {
+			  return this;
+		  }
+		  
+		  if (key > this.key){
+			  if (this.right == null){
+				  return this;
+			  } else {
+				  return root.right.nodeSearch(key);				  
+			  }
+		  }
+		  
+		  if (key < this.key){
+			  if (this.left == null){
+				  return this;
+			  } else {
+				  return root.left.nodeSearch(key);				  
+			  }
+		  }
+		  
+		  return this;
+	  }
   }
 
 }
