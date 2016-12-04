@@ -13,6 +13,7 @@ package UriJonathanCode;
 
 public class WAVLTree {
 
+	
   /**
    * public boolean empty()
    *
