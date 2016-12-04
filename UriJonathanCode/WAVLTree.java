@@ -91,31 +91,146 @@ public class WAVLTree {
 	   }
 	   
 	   //case A: 
-	   rebalanceFrom(newNode);
-	   
-	   return 42;
+	   parentNode.promote();
+	   return 1 + rebalanceAfterPromoting(parentNode);
    }
 
    /*
+    * after insertion:
     * rebalances tree starting from given node
     * assumes both subtrees of node are valid
-    * returns total number of rotations + promotions + 
+    * returns total number of rotations + promotions (no demotions in this case) 
     */
-   public int rebalanceFrom(WAVLNode node) {
+   public int rebalanceAfterPromoting(WAVLNode node) {
 	   
-	   // case 1:  
+	   if (node == root){
+		   return 0;
+	   }
+	   
+	   WAVLNode parent = node.parent;
+	   int parentRank = node.parent.rank;
+	   int nodeRank = node.rank;
+	   
+	   
+	   // case 1 - (1,1) above current node, or (2,2) before the promotion:
+	   if ((parentRank - nodeRank) == 1 ) {
+		   return 0;
+	   }
 
+	   WAVLNode sister; // written in female form but addresses both sexes
+	   if (node.isLeftChild()){
+		   sister = parent.right;
+	   } else { 
+		   sister = parent.left;	   
+	   }
 	   
 	   
-	   //
+	   // case 2 - (0,1) or (1,0) above current node (initial case too):
+		   if (rankDifference(parent, sister) == 1) {
+			   parent.promote();
+			   return 1 + rebalanceAfterPromoting(parent);
+		   }			   
 	   
 	   
-	   //
+	   // case 3 - (0,2) or (2,0) above current node:
+	   // null sister is also a (0,2) case
+	   if (node.isLeftChild()) {
+		   // (1,2) below node - 1 rotation case:
+		   if (rankDifference(node, node.left) == 1){
+			   rotateRight(node,parent);
+			   parent.demote();
+		   } 
+		   
+		   // (2,1) below node - 2 rotations case:
+		   else if (rankDifference(node, node.left) == 2 ) {
+			   WAVLNode climberNode = node.right;
+			   rotateLeft(node, climberNode);
+			   rotateRight(climberNode, climberNode.parent); // climberNode.parent is original nodes parent
+			   climberNode.left.demote();
+			   climberNode.right.demote();
+			   climberNode.promote();
+		   }
+	   } else {
+		   // (2,1) below node - 1 rotation case:
+		   if (rankDifference(node, node.right) == 1){
+			   rotateLeft(parent, node);
+			   parent.demote();
+		   } 
+		   // (1,2) below node - 2 rotations case: 
+		   else if (rankDifference(node, node.right) == 2 ) {
+			   WAVLNode climberNode = node.left;
+			   rotateRight(climberNode, node);
+			   rotateLeft(climberNode.parent, climberNode); // climberNode.parent is original nodes parent
+			   climberNode.left.demote();
+			   climberNode.right.demote();
+			   climberNode.promote();
+		   }
+	   }
 	   
-	   return 1; // + ??
+	   return 1; 
    }
    
    
+   /*
+    * 
+    */
+   public int rankDifference(WAVLNode parent, WAVLNode child){
+	   
+	   if (parent == null){
+		   return -1;
+	   }
+	   
+	   int externalLeafRank = -1;
+	   
+	   if (child == null) {
+		   return parent.rank - externalLeafRank;
+	   }
+	   
+	   return parent.rank - child.rank;
+   }
+   
+   
+   /*
+    * @pre: child isn't root
+    * child is the left child of parent
+    */
+   
+   public void rotateRight(WAVLNode child, WAVLNode parent) {
+	   child.parent = parent.parent;
+	   if (parent.isLeftChild()) {
+		   parent.parent.left = child;
+	   } else {
+		   parent.parent.right = child;
+	   }
+	   
+	   parent.left = child.right;
+	   if (child.right != null) {
+		   child.right.parent = parent;		   
+	   }
+	   
+	   child.right = parent;
+	   parent.parent =child;
+	   
+   }
+   
+   public void rotateLeft(WAVLNode parent, WAVLNode child){
+	   child.parent = parent.parent;
+	   if (parent.isLeftChild()) {
+		   parent.parent.left = child;
+	   } else {
+		   parent.parent.right = child;
+	   }
+	   
+	   parent.right = child.left;
+	   if (child.left != null) {
+		   child.left.parent = parent;		   
+	   }
+	   
+	   child.left = parent;
+	   parent.parent = child;
+	   
+   }
+
    
   /**
    * public int delete(int k)
@@ -243,7 +358,35 @@ public class WAVLTree {
 		  
 		  return this;
 	  }
-  }
+  
+  
+	  /*
+	   * promotes
+	   */
+	  public void promote(){
+		  this.rank += 1;
+	  }
+	  
+	  /*
+	   * demotes
+	   */
+	  public void demote(){
+		  this.rank -= 1;
+	  }
+	  
+	  
+	  /*
+	   * precondition - node is not root.
+	   */
+	  public boolean isLeftChild() {
+		   if (this == this.parent.left){
+			   return true;
+		   }
+		   
+		   return false;
+	  }
+  
+  } // end of WAVLNode class
 
 }
   
