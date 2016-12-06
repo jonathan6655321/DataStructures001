@@ -370,6 +370,7 @@ public class WAVLTree {
 	   * or parent of that node if no node with such key exists
 	   */
 	  public WAVLNode nodeSearch(int key){
+//		  System.out.println("Searching for "+key+", current node: "+this.key);
 		  
 		  if (key == this.key) {
 			  return this;
@@ -379,7 +380,7 @@ public class WAVLTree {
 			  if (this.right == null){
 				  return this;
 			  } else {
-				  return root.right.nodeSearch(key);				  
+				  return this.right.nodeSearch(key);				  
 			  }
 		  }
 		  
@@ -387,7 +388,7 @@ public class WAVLTree {
 			  if (this.left == null){
 				  return this;
 			  } else {
-				  return root.left.nodeSearch(key);				  
+				  return this.left.nodeSearch(key);				  
 			  }
 		  }
 		  
