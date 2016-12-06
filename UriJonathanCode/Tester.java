@@ -13,7 +13,6 @@ public class Tester {
 			System.out.println("passed empty()");
 		}
 
-		
 		//1
 		tree1.insert(5, "ahalan");
 		if (!tree1.search(5).equals("ahalan")){
@@ -42,6 +41,11 @@ public class Tester {
 		} else {
 			System.out.println("passed search() 4");
 		}	
+		
+		tree1.insert(11, "hello");
+		tree1.insert(2, "hey");
+		System.out.println(tree1.toStringPreOrder());
+		tree1.insert(16, "hii");
 	}
 
 }
