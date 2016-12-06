@@ -361,7 +361,7 @@ public class WAVLTree {
 	  }
 	  
 	  public String toString(){
-		  return "(" + String.valueOf(key) + ":" + info + ")";
+		  return "(" + key + ":" + info + ")";
 	  }
 	  
 	  /*
