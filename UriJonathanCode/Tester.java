@@ -50,6 +50,9 @@ public class Tester {
 		tree1.insert(8, "hii");
 		tree1.insert(9, "hii");
 		System.out.println(tree1.toStringPreOrder());
+		tree1.insert(2, "hey");
+		tree1.insert(0, "hey");
+		System.out.println(tree1.toStringPreOrder());
 		
 	}
 }
