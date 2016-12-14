@@ -269,7 +269,7 @@ public class WAVLTree {
    /**
     * public String min()
     *
-    * Returns the i×žfo of the item with the smallest key in the tree,
+    * Returns the i×nfo of the item with the smallest key in the tree,
     * or null if the tree is empty
     */
    public String min()
@@ -326,6 +326,17 @@ public class WAVLTree {
 	   return 42; // to be replaced by student code
    }
 
+   public String toStringPreOrder(){
+	   return toStringPreOrderNode(root);
+   }
+   
+   public String toStringPreOrderNode(WAVLNode parent){
+	   if (parent == null){
+	    return "";
+	   } else {
+	    return parent.toString() + " " + toStringPreOrderNode(parent.left) + toStringPreOrderNode(parent.right);
+	   }
+   }
   /**
    * public class WAVLNode
    *
@@ -349,6 +360,9 @@ public class WAVLTree {
 		  this.key = key;  
 	  }
 	  
+	  public String toString(){
+		  return "(" + key + ":" + info + ")";
+	  }
 	  
 	  /*
 	   * recursively searches subtree starting from node
@@ -356,6 +370,7 @@ public class WAVLTree {
 	   * or parent of that node if no node with such key exists
 	   */
 	  public WAVLNode nodeSearch(int key){
+//		  System.out.println("Searching for "+key+", current node: "+this.key);
 		  
 		  if (key == this.key) {
 			  return this;
@@ -365,7 +380,7 @@ public class WAVLTree {
 			  if (this.right == null){
 				  return this;
 			  } else {
-				  return root.right.nodeSearch(key);				  
+				  return this.right.nodeSearch(key);				  
 			  }
 		  }
 		  
@@ -373,7 +388,7 @@ public class WAVLTree {
 			  if (this.left == null){
 				  return this;
 			  } else {
-				  return root.left.nodeSearch(key);				  
+				  return this.left.nodeSearch(key);				  
 			  }
 		  }
 		  
