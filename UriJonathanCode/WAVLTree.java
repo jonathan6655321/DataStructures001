@@ -308,6 +308,7 @@ public class WAVLTree {
 	  // collecting the details about the case
 	  boolean isLeaf = toBeDeleted.isLeaf();
 	  boolean isUnary = toBeDeleted.isUnary();
+	 
 	  
 	  if (!(isLeaf && isUnary)){ //both are false
 //		  toBeDeleted = toBeDeleted.getSuccessor()	  
@@ -315,18 +316,49 @@ public class WAVLTree {
 	
 	  isLeaf = toBeDeleted.isLeaf();
 	  isUnary = toBeDeleted.isUnary();
+	  boolean hasLeftChild = toBeDeleted.hasLeftChild();
 	  WAVLNode parentNode = toBeDeleted.parent; 
 	  boolean isLeftChild = toBeDeleted.isLeftChild();
 	  
-	  // final case: toBeDeleted is a leaf and a lonely child
+	  // terminal case 1: toBeDeleted and his sister are both leafs
 	  if (isLeaf){
 		  if (isLeftChild){
-			  parentNode.left = null;
-			  return 0;			  
+			  if (parentNode.right != null){
+				  parentNode.left = null;
+			  }
+		  } else {
+			  if (parentNode.left != null){
+				  parentNode.right = null;
+			  }
 		  }
-		  
+		  return 0;		
 	  }
-		  
+	  
+	  // terminal case 2: toBeDeleted is an unary node and the R-D with its parent is 1
+	  if (isUnary && rankDifference(parentNode, toBeDeleted)==1){
+		  if (hasLeftChild && isLeftChild){ 
+			  toBeDeleted.left.parent = parentNode;
+			  parentNode.left = toBeDeleted.left;			  
+		  }
+		  else if (hasLeftChild && !isLeftChild){
+			  toBeDeleted.left.parent = parentNode;
+			  parentNode.right = toBeDeleted.left;
+		  }
+		  else if (!hasLeftChild && isLeftChild){
+			  toBeDeleted.right.parent = parentNode;
+			  parentNode.left = toBeDeleted.right;
+		  }
+		  else if (!hasLeftChild && !isLeftChild){
+			  toBeDeleted.right.parent = parentNode;
+			  parentNode.right = toBeDeleted.right;
+		  }
+		  return 0;		  
+	  }
+	  
+	  // non-terminal case 1: 
+	  
+	 
+		  		  
 		  
 	   return 42;	// to be replaced by student code
    }
@@ -570,7 +602,7 @@ public class WAVLTree {
 		   
 		   return false;
 	  }
-  
+	  
   } // end of WAVLNode class
 
 }
