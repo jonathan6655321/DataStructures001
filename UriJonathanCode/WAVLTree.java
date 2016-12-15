@@ -292,6 +292,42 @@ public class WAVLTree {
    */
    public int delete(int k)
    {
+	   // empty tree
+	   if (root == null){
+		   return -1;
+	   }
+		  
+		
+	  WAVLNode toBeDeleted = this.root.nodeSearch(k);
+	  
+	  // there is no node with the key k
+	  if (toBeDeleted.key != k){
+		  return -1;
+	  }
+	  
+	  // collecting the details about the case
+	  boolean isLeaf = toBeDeleted.isLeaf();
+	  boolean isUnary = toBeDeleted.isUnary();
+	  
+	  if (!(isLeaf && isUnary)){ //both are false
+//		  toBeDeleted = toBeDeleted.getSuccessor()	  
+	  }
+	
+	  isLeaf = toBeDeleted.isLeaf();
+	  isUnary = toBeDeleted.isUnary();
+	  WAVLNode parentNode = toBeDeleted.parent; 
+	  boolean isLeftChild = toBeDeleted.isLeftChild();
+	  
+	  // final case: toBeDeleted is a leaf and a lonely child
+	  if (isLeaf){
+		  if (isLeftChild){
+			  parentNode.left = null;
+			  return 0;			  
+		  }
+		  
+	  }
+		  
+		  
 	   return 42;	// to be replaced by student code
    }
 
@@ -505,6 +541,30 @@ public class WAVLTree {
 	   */
 	  public boolean isLeftChild() {
 		   if (this == this.parent.left){
+			   return true;
+		   }
+		   
+		   return false;
+	  }
+	  
+	  public boolean isLeaf() {
+		   if (this.left==null && this.right==null){
+			   return true;
+		   }
+		   
+		   return false;
+	  }
+	  
+	  public boolean isUnary() {
+		   if (this.left==null ^ this.right==null){
+			   return true;
+		   }
+		   
+		   return false;
+	  }
+	  
+	  public boolean hasLeftChild() {
+		   if (this.left != null){
 			   return true;
 		   }
 		   
