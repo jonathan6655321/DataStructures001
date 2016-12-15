@@ -306,12 +306,16 @@ public class WAVLTree {
 		  return -1;
 	  }
 	  
+	  updateMinDelete(toBeDeleted);
+	  updateMaxDelete(toBeDeleted);
+	  
+	  
 	  // collecting the details about the case
 	  boolean isLeaf = toBeDeleted.isLeaf();
 	  boolean isUnary = toBeDeleted.isUnary();
 	 
 	  
-	  if (!(isLeaf && isUnary)){ //both are false
+	  if (!(isLeaf && isUnary)){ //toBeDeleted is not a leaf nor an unary node
 //		  toBeDeleted = toBeDeleted.getSuccessor()	  
 	  }
 	
@@ -326,13 +330,16 @@ public class WAVLTree {
 		  if (isLeftChild){
 			  if (parentNode.right != null){
 				  parentNode.left = null;
+				  this.treeSize--;
+				  return 0;	
 			  }
 		  } else {
 			  if (parentNode.left != null){
 				  parentNode.right = null;
+				  this.treeSize--;
+				  return 0;	
 			  }
-		  }
-		  return 0;		
+		  }  	
 	  }
 	  
 	  // two options: terminal or not, depends on the R-D with the parent
@@ -355,6 +362,7 @@ public class WAVLTree {
 		  }
 		// terminal case 2: toBeDeleted is an unary node and the R-D with its parent is 1
 		  if (rankDifference(parentNode, toBeDeleted)==1){
+			  this.treeSize--;
 			  return 0;	
 		  }
 		// non-terminal case 3: toBeDeleted is an unary node and the R-D with its parent is 2
@@ -363,6 +371,11 @@ public class WAVLTree {
 	  
 	  // non-terminal case 1: toBeDeleted is a leaf and his parent is an unary node
 	  if (isLeaf && parentNode.isUnary()){
+		  if (isLeftChild){
+			  parentNode.left = null;
+		  } else {
+			  parentNode.right = null;
+		  }
 		  parentNode.demote();
 		  countActions++;
 	  }
@@ -376,15 +389,107 @@ public class WAVLTree {
 		  }
 	  }
 	  
-	   return countActions + rebalanceAfterDeletion(parentNode);	// to be replaced by student code
+	  this.treeSize--;
+	  return countActions + rebalanceAfterDeletion(parentNode);
    }
 
-   public int rebalanceAfterDeletion(WAVLNode node) {
-	   int count = 0;
+   public int rebalanceAfterDeletion(WAVLNode parentNode) {
 	   
 	   
+	   WAVLNode rightChild = parentNode.right;
+	   WAVLNode leftChild = parentNode.left;
+	   WAVLNode newParent = parentNode.parent;
+	   int leftRankDiff = rankDifference(parentNode, leftChild);
+	   int rightRankDiff = rankDifference(parentNode, rightChild);
 	   
-	   return count;
+	   
+	   // case 1 - "Demote": parentNode is a (3,2) or (2,3) node
+	   if ((leftRankDiff > 1) && (rightRankDiff > 1)){
+		   parentNode.demote();
+		   if (newParent == null){  // parentNode is root
+			   return 1;
+		   } else {
+			   return 1 + rebalanceAfterDeletion(newParent);
+		   }
+	   } 
+	  
+	   
+	   
+	   if ((leftRankDiff==1) && (rightRankDiff==3)) {
+		   // case 2 (left) - "Double demote":  parentNode is a (1,3) node and the left child is a (2,2) node
+		   if  ((rankDifference(leftChild, leftChild.left) == 2) && (rankDifference(leftChild, leftChild.right) == 2)){
+			   leftChild.demote();
+			   parentNode.demote();
+			   if (newParent == null){  // parentNode is root
+				   return 2;
+			   } else {
+				   return 2 + rebalanceAfterDeletion(newParent);
+			   }
+		   }
+	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
+		   // case 2 (right) - "Double demote":  parentNode is a (3,1) node and the right child is a (2,2) node
+		   if  ((rankDifference(rightChild, rightChild.left) == 2) && (rankDifference(rightChild, rightChild.right) == 2)){
+			   rightChild.demote();
+			   parentNode.demote();
+			   if (newParent == null){  // parentNode is root
+				   return 2;
+			   } else {
+				   return 2 + rebalanceAfterDeletion(newParent);
+			   }
+		   }
+	   }
+	   
+	   
+	   if ((leftRankDiff==1) && (rightRankDiff==3) ) {
+		   // case 3 (left) - "Rotate":  parentNode is a (1,3) node and the R-D of the left child with the leftmost grandson is 1
+		   if  (rankDifference(leftChild, leftChild.left) == 1){
+			   WAVLNode climberNode = leftChild;
+			   rotateRight(climberNode,parentNode);
+			   parentNode.demote();
+			   climberNode.promote();
+			   return 3;			   
+		   }
+	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
+		   // case 3 (right) - "Rotate":  parentNode is a (3,1) node and the R-D of the right child with the rightmost grandson is 1
+		   if (rankDifference(rightChild, rightChild.right) == 1){
+			   WAVLNode climberNode = rightChild;
+			   rotateLeft(parentNode,climberNode);
+			   parentNode.demote();
+			   climberNode.promote();
+			   return 3;
+		   }
+	   }
+	   
+	   
+	   if ((leftRankDiff==1) && (rightRankDiff==3) ) {
+		   // case 4 (left) - "Double Rotate":  parentNode is a (1,3) node and the R-D of the left child with the leftmost grandson is 2
+		   if  (rankDifference(leftChild, leftChild.left) == 2){
+			   WAVLNode climberNode = leftChild.right;
+			   rotateLeft(leftChild,climberNode);
+			   rotateRight(climberNode,parentNode);
+			   climberNode.promote();
+			   climberNode.promote();
+			   leftChild.demote();
+			   parentNode.demote();
+			   parentNode.demote();
+			   return 7;	   
+		   }
+	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
+		   // case 4 (right) - "Double Rotate":  parentNode is a (3,1) node and the R-D of the right child with the rightmost grandson is 2
+		   if  (rankDifference(rightChild, rightChild.right) == 2){
+			   WAVLNode climberNode = rightChild.left;
+			   rotateRight(climberNode,rightChild);
+			   rotateLeft(parentNode,climberNode);
+			   climberNode.promote();
+			   climberNode.promote();
+			   rightChild.demote();
+			   parentNode.demote();
+			   parentNode.demote();
+			   return 7;			   
+		   }
+	   }   
+	   
+	   return -10000;
    }
    
    
@@ -495,6 +600,39 @@ public class WAVLTree {
 	  }
 	  return;
   }
+  
+  private void updateMinDelete(WAVLNode toBeDeletedNode){
+	  if (this.minNode == null){ // trying to delete a node from an empty tree
+		  return;
+	  }
+	  
+	  if (toBeDeletedNode.key == this.minNode.key ){
+		  if (this.root.key != this.minNode.key){
+			  this.minNode = this.minNode.parent;
+		  } else {
+			  this.minNode = this.root.right;
+		  }
+	  }
+	  
+	  return;
+  }
+  
+  private void updateMaxDelete(WAVLNode toBeDeletedNode){
+	  if (this.maxNode == null){ // trying to delete a node from an empty tree
+		  return;
+	  }
+	  
+	  if (toBeDeletedNode.key == this.maxNode.key ){
+		  if (this.root.key != this.maxNode.key){
+			  this.maxNode = this.maxNode.parent;
+		  } else {
+			  this.maxNode = this.root.left;
+		  }
+	  }
+	  
+	  return;
+  }
+  
    /**
     * public int size()
     *

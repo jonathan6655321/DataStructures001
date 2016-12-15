@@ -28,8 +28,8 @@ public class Tester {
 			System.out.println("passed search() 2");
 		}
 		//3
-		tree1.insert(7, "seven");
-		if (!tree1.search(7).equals("seven")){
+		tree1.insert(8, "seven");
+		if (!tree1.search(8).equals("seven")){
 			System.out.println("error search() 3");
 		} else {
 			System.out.println("passed search() 3");
@@ -47,12 +47,31 @@ public class Tester {
 //		System.out.println(tree1.toStringPreOrder());
 //		tree1.insert(16, "hii");
 //	}
-		tree1.insert(8, "hii");
-		tree1.insert(9, "hii");
+		tree1.insert(10, "hii");
+		tree1.insert(13, "hii");
 		System.out.println(tree1.toStringPreOrder());
 		tree1.insert(2, "hey");
 		tree1.insert(0, "hey");
 		System.out.println(tree1.toStringPreOrder());
 		
+//		
+		tree1.delete(5);
+		System.out.println(tree1.toStringPreOrder());
+		
+		tree1.insert(9, "aloha");
+		System.out.println(tree1.toStringPreOrder());
+		
+		tree1.insert(7, "tree");
+		System.out.println(tree1.toStringPreOrder());
+		
+		System.out.println("");
+		System.out.println("deleting (2:hey):");
+		tree1.delete(2);
+		System.out.println(tree1.toStringPreOrder());
+		
+
+
+
+
 	}
 }
