@@ -1,5 +1,7 @@
 package UriJonathanCode;
 
+import java.util.Iterator;
+
 /**
  *
  *Uri and Jonathan
@@ -14,6 +16,9 @@ package UriJonathanCode;
 public class WAVLTree {
 
 	private WAVLNode root = null;
+	private WAVLNode minNode = null;
+	private WAVLNode maxNode = null;
+	private int treeSize = 0;
 	
 	public WAVLTree() {
 		root = null;
@@ -74,6 +79,11 @@ public class WAVLTree {
 		   return -1;
 	   }
 	   
+	   // after we are sure the newNode will be inserted:
+	   this.updateMinInsert(newNode);
+	   this.updateMaxInsert(newNode);
+	   this.treeSize++;
+	   
 	   // found node is the parent of the node we are inserting
 	   if ( k > parentNode.key) {
 		   parentNode.right = newNode;
@@ -113,7 +123,7 @@ public class WAVLTree {
 	   
 	   
 	   // case 1 - (1,1) above current node, or (2,2) before the promotion:
-	   if ((parentRank - nodeRank) == 1 ) {
+	   if (rankDifference(parent, node) == 1 ) {
 		   return 0;
 	   }
 
@@ -137,6 +147,7 @@ public class WAVLTree {
 	   if (node.isLeftChild()) {
 		   // (1,2) below node - 1 rotation case:
 		   if (rankDifference(node, node.left) == 1){
+			   
 			   rotateRight(node,parent);
 			   parent.demote();
 			   return 2;
@@ -191,7 +202,20 @@ public class WAVLTree {
 	   }
 	   
 	   return parent.rank - child.rank;
+   
+//   new variation: 
+//	   if(child == null){
+//		   if((parent.right != null) || (parent.left!=null)){
+//			   return 2;
+//		   } else {
+//			   return 1;
+//		   }
+//		   
+//	   }
+//	   return child.rankDifferenceFromParent;
+   
    }
+   
    
    
    /*
@@ -260,6 +284,11 @@ public class WAVLTree {
    * the tree must remain valid (keep its invariants).
    * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
    * returns -1 if an item with key k was not found in the tree.
+   * 
+   * 
+   * for us:
+   * update min max
+   * update size
    */
    public int delete(int k)
    {
@@ -274,7 +303,11 @@ public class WAVLTree {
     */
    public String min()
    {
-	   return "42"; // to be replaced by student code
+	   if (this.root == null){
+		   return null;
+	   } else {
+		   return this.minNode.info;
+	   }
    }
 
    /**
@@ -285,7 +318,11 @@ public class WAVLTree {
     */
    public String max()
    {
-	   return "42"; // to be replaced by student code
+	   if (this.root == null){
+		   return null;
+	   } else {
+		   return this.maxNode.info;
+	   }
    }
 
   /**
@@ -312,7 +349,58 @@ public class WAVLTree {
         String[] arr = new String[42]; // to be replaced by student code
         return arr;                    // to be replaced by student code
   }
+  
+  private class inOrderIterator {
+	  
+	  private WAVLNode currentNode = null;
+	  private WAVLNode lastNode = null;
+	  
+	  public inOrderIterator (WAVLNode minNode, WAVLNode maxNode){
+		  this.currentNode = minNode;
+		  this.lastNode = maxNode;
+	  }
+	  
+	  public boolean hasNext() {
+		  if (this.currentNode == this.lastNode){
+			  return false;
+		  }
+		  else {
+			  return true;
+		  }
+	  }
+	  
+	  public WAVLNode next(){
+		  
+		  
+	  }
+	  
+	  public void remove(){
+	  }
+	  
+  }
 
+ 
+  private void updateMinInsert(WAVLNode insertedNode){
+	  if (this.minNode == null){
+		  this.minNode = insertedNode;
+	  }
+	  
+	  else if(insertedNode.key < this.minNode.key){
+		  this.minNode = insertedNode;
+	  }
+	  return;
+  }
+  
+  private void updateMaxInsert(WAVLNode insertedNode){
+	  if (this.maxNode == null){
+		  this.maxNode = insertedNode;
+	  }
+	  
+	  else if(insertedNode.key > this.maxNode.key){
+		  this.maxNode = insertedNode;
+	  }
+	  return;
+  }
    /**
     * public int size()
     *
@@ -323,7 +411,7 @@ public class WAVLTree {
     */
    public int size()
    {
-	   return 42; // to be replaced by student code
+	   return this.treeSize; // to be replaced by student code
    }
 
    public String toStringPreOrder(){
@@ -350,6 +438,7 @@ public class WAVLTree {
 	  public String info;
 	  public int key;
 	  public int rank = 0;
+//	  public int rankDifferenceFromParent = 
 	  
 	  public WAVLNode parent;
 	  public WAVLNode left;
