@@ -42,11 +42,7 @@ public class Tester {
 			System.out.println("passed search() 4");
 		}	
 		
-//		tree1.insert(11, "hello");
-//		tree1.insert(2, "hey");
-//		System.out.println(tree1.toStringPreOrder());
-//		tree1.insert(16, "hii");
-//	}
+
 		tree1.insert(10, "hii");
 		tree1.insert(13, "hii");
 		System.out.println(tree1.toStringPreOrder());
@@ -54,7 +50,7 @@ public class Tester {
 		tree1.insert(0, "hey");
 		System.out.println(tree1.toStringPreOrder());
 		
-//		
+
 		tree1.delete(5);
 		System.out.println(tree1.toStringPreOrder());
 		
@@ -68,8 +64,6 @@ public class Tester {
 		System.out.println("deleting (2:hey):");
 		tree1.delete(2);
 		System.out.println(tree1.toStringPreOrder());
-		
-
 
 
 
