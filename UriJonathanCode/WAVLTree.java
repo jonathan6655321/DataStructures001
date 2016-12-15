@@ -299,6 +299,7 @@ public class WAVLTree {
 		  
 		
 	  WAVLNode toBeDeleted = this.root.nodeSearch(k);
+	  int countActions = 0;
 	  
 	  // there is no node with the key k
 	  if (toBeDeleted.key != k){
@@ -334,8 +335,8 @@ public class WAVLTree {
 		  return 0;		
 	  }
 	  
-	  // terminal case 2: toBeDeleted is an unary node and the R-D with its parent is 1
-	  if (isUnary && rankDifference(parentNode, toBeDeleted)==1){
+	  // two options: terminal or not, depends on the R-D with the parent
+	  if (isUnary){
 		  if (hasLeftChild && isLeftChild){ 
 			  toBeDeleted.left.parent = parentNode;
 			  parentNode.left = toBeDeleted.left;			  
@@ -352,17 +353,42 @@ public class WAVLTree {
 			  toBeDeleted.right.parent = parentNode;
 			  parentNode.right = toBeDeleted.right;
 		  }
-		  return 0;		  
+		// terminal case 2: toBeDeleted is an unary node and the R-D with its parent is 1
+		  if (rankDifference(parentNode, toBeDeleted)==1){
+			  return 0;	
+		  }
+		// non-terminal case 3: toBeDeleted is an unary node and the R-D with its parent is 2
 	  }
 	  
-	  // non-terminal case 1: 
 	  
-	 
-		  		  
-		  
-	   return 42;	// to be replaced by student code
+	  // non-terminal case 1: toBeDeleted is a leaf and his parent is an unary node
+	  if (isLeaf && parentNode.isUnary()){
+		  parentNode.demote();
+		  countActions++;
+	  }
+	  
+	  // non-terminal case 2: toBeDeleted is a leaf and the R-D with its parent is 2
+	  if (isLeaf && rankDifference(parentNode, toBeDeleted)==2){
+		  if (isLeftChild){
+			  parentNode.left = null;
+		  } else {
+			  parentNode.right = null;
+		  }
+	  }
+	  
+	   return countActions + rebalanceAfterDeletion(parentNode);	// to be replaced by student code
    }
 
+   public int rebalanceAfterDeletion(WAVLNode node) {
+	   int count = 0;
+	   
+	   
+	   
+	   return count;
+   }
+   
+   
+   
    /**
     * public String min()
     *
