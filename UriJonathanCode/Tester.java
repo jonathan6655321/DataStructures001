@@ -28,8 +28,8 @@ public class Tester {
 			System.out.println("passed search() 2");
 		}
 		//3
-		tree1.insert(8, "seven");
-		if (!tree1.search(8).equals("seven")){
+		tree1.insert(8, "eight");
+		if (!tree1.search(8).equals("eight")){ //if 8 was not in our tree we would get an exception here. cause: tree1.search(8) == null
 			System.out.println("error search() 3");
 		} else {
 			System.out.println("passed search() 3");
