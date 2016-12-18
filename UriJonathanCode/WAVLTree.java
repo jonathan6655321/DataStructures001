@@ -316,7 +316,14 @@ public class WAVLTree {
 	 
 	  
 	  if (!(isLeaf && isUnary)){ //toBeDeleted is not a leaf nor an unary node
-//		  toBeDeleted = toBeDeleted.getSuccessor()	  
+//		  successor = toBeDeleted.getSuccessor();
+//		  int successorKey = successor.key;
+//		  String successorInfo = successor.info;
+//		  successor.key = toBeDeleted.key;
+//		  successor.info = toBeDeleted.info;
+//		  toBeDeleted.key = successorKey;
+//		  toBeDeleted.info = successorInfo;
+//		  toBeDeleted = successor;
 	  }
 	
 	  isLeaf = toBeDeleted.isLeaf();
