@@ -7,24 +7,39 @@ public class StatsFromWAVL {
 
 	public static void main(String[] args) {
 		
-		for (int size=1; size < 11; size++){
+		for (int size=1; size < 2; size++){
 			
-			int insertOperationNum = 0;
-			int deleteOperationNum = 0;
+			double insertOperationNum = 0.0;
+			double deleteOperationNum = 0.0;
 			WAVLTree tree = new WAVLTree();
 			
-			for(int i: getRandomKeysArray(size)){
+			ArrayList<Integer> randomKeys = getRandomKeysArray(size);
+			
+			for(int i: randomKeys ){
 				insertOperationNum += tree.insert(i, Integer.toString(i));
 			}
+			System.out.println(insertOperationNum + " is num of insert operations for tree of size: " + size*10000);
+			System.out.println(insertOperationNum/10000*size  + " is the AVERAGE num of insert operations for tree of size: " + tree.size());
 			
-//			int currentMinKey;
-//			while (tree.getRoot() != null){
-//				currentMinKey = tree.getMinKey();
-//				deleteOperationNum = tree.delete(currentMinKey);
-//			}
-			System.out.println(insertOperationNum + " is num of insert operations for tree of size: " + tree.size());
-			System.out.println(insertOperationNum/tree.size() + " is the AVERAGE num of insert operations for tree of size: " + tree.size());
-//			System.out.println(deleteOperationNum + " is num of delete operations  for tree of size: " + tree.size());
+			System.out.println(tree.toStringPreOrder());
+			
+			int currentMinKey;
+			while (tree.getRoot() != null){
+				if ( tree.getRoot().key == 98){
+					System.out.println(tree.toStringPreOrder());
+					System.out.println(tree.getRoot().right);
+					System.out.println(tree.getMinKey());
+				}
+				currentMinKey = tree.getMinKey();
+				System.out.println(currentMinKey);
+				System.out.println(tree.getMinKey());
+				deleteOperationNum += tree.delete(currentMinKey);
+			}
+			
+			System.out.println(tree.getRoot());
+			System.out.println(deleteOperationNum + " is num of delete operations  for tree of size: " + tree.size());
+			System.out.println(deleteOperationNum/10000*size + " is num of AVERAGE delete operations  for tree of size: " + tree.size());
+			
 			
 		}
 		
@@ -37,7 +52,7 @@ public class StatsFromWAVL {
 	public static ArrayList<Integer> getRandomKeysArray(int size){
 		
 	       ArrayList<Integer> randomKeysArray = new ArrayList<Integer>();
-	        for (int i=0; i<size*10000; i++) {
+	        for (int i=0; i<size*100; i++) {
 	            randomKeysArray.add(new Integer(i));
 	        }
 	        Collections.shuffle(randomKeysArray);

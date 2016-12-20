@@ -310,8 +310,15 @@ public class WAVLTree {
 		  return -1;
 	  }
 	  
+	  this.treeSize--;
 	  updateMinDelete(toBeDeleted);
 	  updateMaxDelete(toBeDeleted);
+	  
+	  if (toBeDeleted == this.root && size() == 1){
+		  this.root = null;
+		  return 0;
+	  }
+	  
 	  
 	  
 	  // collecting the details about the case
@@ -319,45 +326,116 @@ public class WAVLTree {
 	  boolean isUnary = toBeDeleted.isUnary();
 	 
 	  
-	  if (!(isLeaf && isUnary)){ //toBeDeleted is not a leaf nor an unary node
-//		  successor = toBeDeleted.getSuccessor();
-//		  int successorKey = successor.key;
-//		  String successorInfo = successor.info;
-//		  successor.key = toBeDeleted.key;
-//		  successor.info = toBeDeleted.info;
-//		  toBeDeleted.key = successorKey;
-//		  toBeDeleted.info = successorInfo;
-//		  toBeDeleted = successor;
+	  if (!isLeaf && !isUnary){ //toBeDeleted is not a leaf nor an unary node
+		  WAVLNode successor;
+		  successor = successorOf(toBeDeleted);
+		  
+		  // switch ranks:
+		  int toBeDeletedRank = toBeDeleted.rank;
+		  toBeDeleted.rank = successor.rank;
+		  successor.rank = toBeDeletedRank;
+		  
+		  // left child "switch"
+		  toBeDeleted.left.parent = successor;		 
+		  successor.left =  toBeDeleted.left;
+		  toBeDeleted.left = null;
+		  
+		  // successor is right child case:
+		  if (successor == toBeDeleted.right){
+			  if (toBeDeleted.parent == null){
+				  successor.parent = null;
+				  toBeDeleted.right = successor.right; // successor.right could be null
+				  if (successor.right != null){
+					  successor.right.parent = toBeDeleted;  
+				  }
+				  successor.right = toBeDeleted;
+				  toBeDeleted.parent = successor;
+				  this.root = successor;
+			  } else if (toBeDeleted.parent != null){
+					  successor.parent = toBeDeleted.parent;
+					  if (toBeDeleted.isLeftChild()){
+						  toBeDeleted.parent.left = successor;
+					  } else {
+						  toBeDeleted.parent.right = successor;
+					  }
+					  toBeDeleted.parent = successor;
+					  toBeDeleted.right = successor.right; // could be null
+					  if (successor.right != null){
+						  successor.right.parent = toBeDeleted;
+					  }
+					  successor.right = toBeDeleted;
+				  }  
+			  } else { // successor is a left child, not of toBeDeleted
+				  if (toBeDeleted.parent == null) {
+					  WAVLNode sucParent = successor.parent;
+					  WAVLNode toBeRight = toBeDeleted.right;
+					  
+					  successor.parent = toBeDeleted.parent; // could be null
+					  if (toBeDeleted.parent != null){
+						  if (toBeDeleted.isLeftChild()){
+							  toBeDeleted.parent.left = successor;
+						  } else {
+							  toBeDeleted.parent.right = successor;
+						  }
+					  }
+					  toBeDeleted.right = successor.right; // could be null
+					  if (successor.right != null){
+						  successor.right.parent = toBeDeleted;
+					  }
+					  
+					  successor.right = toBeRight;
+					  toBeRight.parent = successor;
+					  
+					  toBeDeleted.parent = sucParent;
+					  sucParent.left = toBeDeleted;
+					  this.root = successor;
+				  }  
+			  }
 	  }
 	
-	  isLeaf = toBeDeleted.isLeaf();
+	  
+	  // now - toBeDeleted is the node to delete.. 
+	  isLeaf = toBeDeleted.isLeaf(); // TODO must be one of these exactly.. 
 	  isUnary = toBeDeleted.isUnary();
-	  boolean hasLeftChild = toBeDeleted.hasLeftChild();
-	  WAVLNode parentNode = toBeDeleted.parent; 
+	  boolean hasLeftChild = toBeDeleted.hasLeftChild(); // TODO doesnt have.. 
+	  WAVLNode parentNode = toBeDeleted.parent; // TODO could be null
 	  boolean isLeftChild = toBeDeleted.isLeftChild();
 	  
 	  // terminal case 1: toBeDeleted and his sister are both leafs
-	  if (isLeaf){
+	  if (isLeaf && rankDifference(parentNode, toBeDeleted) == 1){ // neccessarily has parent, else 1 node tree case. handled.
 		  if (isLeftChild){
 			  if (parentNode.right != null){
 				  parentNode.left = null;
-				  this.treeSize--;
+				  toBeDeleted.parent = null;
 				  return 0;	
 			  }
 		  } else {
 			  if (parentNode.left != null){
 				  parentNode.right = null;
-				  this.treeSize--;
+				  toBeDeleted.parent = null;
 				  return 0;	
 			  }
 		  }  	
 	  }
 	  
-	  // two options: terminal or not, depends on the R-D with the parent
+	  
+	  // two options: terminal or not, depends on the Rank Difference with the parent
 	  if (isUnary){
+		  if (this.root == toBeDeleted){
+			  if(hasLeftChild){
+				  this.root = toBeDeleted.left;
+				  toBeDeleted.left.clear();
+				  toBeDeleted.clear();
+			  } else {
+				  this.root = toBeDeleted.right;
+				  toBeDeleted.right.clear();
+				  toBeDeleted.clear();
+			  }
+			  return 0;
+		  }
 		  if (hasLeftChild && isLeftChild){ 
 			  toBeDeleted.left.parent = parentNode;
-			  parentNode.left = toBeDeleted.left;			  
+			  parentNode.left = toBeDeleted.left;		// TODO if is unary root will yell	  
 		  }
 		  else if (hasLeftChild && !isLeftChild){
 			  toBeDeleted.left.parent = parentNode;
@@ -371,12 +449,15 @@ public class WAVLTree {
 			  toBeDeleted.right.parent = parentNode;
 			  parentNode.right = toBeDeleted.right;
 		  }
+		  
+		  
 		// terminal case 2: toBeDeleted is an unary node and the R-D with its parent is 1
-		  if (rankDifference(parentNode, toBeDeleted)==1){
-			  this.treeSize--;
+		  if (rankDifference(parentNode, toBeDeleted)==1){ 
+			  toBeDeleted.clear();
 			  return 0;	
 		  }
 		// non-terminal case 3: toBeDeleted is an unary node and the R-D with its parent is 2
+		// will be handled in rebalance.
 	  }
 	  
 	  
@@ -387,8 +468,16 @@ public class WAVLTree {
 		  } else {
 			  parentNode.right = null;
 		  }
-		  parentNode.demote();
+		  toBeDeleted.clear();
+		  
+		  parentNode.demote(); // TODO should send father of parent node?
 		  countActions++;
+		  
+		  if (parentNode.parent == null){
+			  return 1;
+		  } else {
+			  parentNode = parentNode.parent;
+		  }
 	  }
 	  
 	  // non-terminal case 2: toBeDeleted is a leaf and the R-D with its parent is 2
@@ -398,9 +487,10 @@ public class WAVLTree {
 		  } else {
 			  parentNode.right = null;
 		  }
+		  toBeDeleted.clear();
 	  }
 	  
-	  this.treeSize--;
+	  
 	  return countActions + rebalanceAfterDeletion(parentNode);
    }
 
@@ -409,7 +499,7 @@ public class WAVLTree {
 	   
 	   WAVLNode rightChild = parentNode.right;
 	   WAVLNode leftChild = parentNode.left;
-	   WAVLNode newParent = parentNode.parent;
+	   WAVLNode newParent = parentNode.parent; // could be null
 	   int leftRankDiff = rankDifference(parentNode, leftChild);
 	   int rightRankDiff = rankDifference(parentNode, rightChild);
 	   
@@ -426,7 +516,7 @@ public class WAVLTree {
 	  
 	   
 	   
-	   if ((leftRankDiff==1) && (rightRankDiff==3)) {
+	    if ((leftRankDiff==1) && (rightRankDiff==3)) {
 		   // case 2 (left) - "Double demote":  parentNode is a (1,3) node and the left child is a (2,2) node
 		   if  ((rankDifference(leftChild, leftChild.left) == 2) && (rankDifference(leftChild, leftChild.right) == 2)){
 			   leftChild.demote();
@@ -458,6 +548,12 @@ public class WAVLTree {
 			   rotateRight(climberNode,parentNode);
 			   parentNode.demote();
 			   climberNode.promote();
+			   
+			   if (parentNode.isLeaf() && parentNode.rank > 0) { // 2,2 leaf case.
+				   parentNode.demote();
+				   return 4;
+			   }
+			   
 			   return 3;			   
 		   }
 	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
@@ -467,6 +563,12 @@ public class WAVLTree {
 			   rotateLeft(parentNode,climberNode);
 			   parentNode.demote();
 			   climberNode.promote();
+			   
+			   if (parentNode.isLeaf() && parentNode.rank > 0) { // 2,2 leaf case
+				   parentNode.demote();
+				   return 4;
+			   }
+			   
 			   return 3;
 		   }
 	   }
@@ -474,7 +576,7 @@ public class WAVLTree {
 	   
 	   if ((leftRankDiff==1) && (rightRankDiff==3) ) {
 		   // case 4 (left) - "Double Rotate":  parentNode is a (1,3) node and the R-D of the left child with the leftmost grandson is 2
-		   if  (rankDifference(leftChild, leftChild.left) == 2){
+		   if  (rankDifference(leftChild, leftChild.left) == 2){ // case 2 handled, only need to check this.
 			   WAVLNode climberNode = leftChild.right;
 			   rotateLeft(leftChild,climberNode);
 			   rotateRight(climberNode,parentNode);
@@ -500,7 +602,7 @@ public class WAVLTree {
 		   }
 	   }   
 	   
-	   return -10000;
+	   return 0;
    }
    
    
@@ -623,7 +725,7 @@ public class WAVLTree {
   
   public WAVLNode successorOf(WAVLNode node){
 	  
-	  if (node == maxNode){
+	  if (node == this.maxNode){
 		  return node;
 	  }
 	  
@@ -637,7 +739,7 @@ public class WAVLTree {
 		  }
 		  return successor;
 	  } 
-	  else // no right child? go up until you are a left child 
+	  else // no right child? go up until you are a left child, return your parent
 	  { 
 		  while (successor.parent != null){
 			  if (successor == successor.parent.left){
@@ -651,6 +753,37 @@ public class WAVLTree {
 	  return successor;
   }
 
+  
+  
+  public WAVLNode predOf(WAVLNode node){
+	  
+	  if (node == this.minNode){
+		  return node;
+	  }
+	  
+	  WAVLNode pred = node;
+	  
+	  // left once and right all the way
+	  if (pred.left != null) {
+		  pred = pred.left;
+		  while (pred.right != null){
+			  pred = pred.right;
+		  }
+		  return pred;
+	  } 
+	  else // no left child? go up until you are a right child, return your parent
+	  { 
+		  while (pred.parent != null){
+			  if (pred == pred.parent.right){
+				  return pred.parent;
+			  } else {
+				  pred = pred.parent;
+			  }
+		  }
+	  }
+	  
+	  return pred;
+  }
  
   private void updateMinInsert(WAVLNode insertedNode){
 	  if (this.minNode == null){
@@ -677,14 +810,11 @@ public class WAVLTree {
   private void updateMinDelete(WAVLNode toBeDeletedNode){
 	  if (this.minNode == null){ // trying to delete a node from an empty tree
 		  return;
-	  }
-	  
-	  if (toBeDeletedNode.key == this.minNode.key ){
-		  if (this.root.key != this.minNode.key){
-			  this.minNode = this.minNode.parent; // TODO min node could have right child
-		  } else {
-			  this.minNode = this.root.right;
-		  }
+	  } else  if (toBeDeletedNode == this.minNode && this.minNode == this.maxNode){
+		  minNode = null;
+		  
+	  } else if (toBeDeletedNode.key == this.minNode.key ){
+		  this.minNode = successorOf(minNode);
 	  }
 	  
 	  return;
@@ -693,14 +823,10 @@ public class WAVLTree {
   private void updateMaxDelete(WAVLNode toBeDeletedNode){
 	  if (this.maxNode == null){ // trying to delete a node from an empty tree
 		  return;
-	  }
-	  
-	  if (toBeDeletedNode.key == this.maxNode.key ){
-		  if (this.root.key != this.maxNode.key){
-			  this.maxNode = this.maxNode.parent; // TODO max could have left child
-		  } else {
-			  this.maxNode = this.root.left;
-		  }
+	  } else if (toBeDeletedNode == this.minNode && this.minNode == this.maxNode){
+		  minNode = null;
+	  } else if (toBeDeletedNode.key == this.maxNode.key ){
+		  this.maxNode = predOf(this.maxNode);
 	  }
 	  
 	  return;
@@ -817,6 +943,10 @@ public class WAVLTree {
 	   * precondition - node is not root.
 	   */
 	  public boolean isLeftChild() {
+		  if (this.parent == null){
+			  return false;
+		  }
+		  
 		   if (this == this.parent.left){
 			   return true;
 		   }
@@ -849,6 +979,11 @@ public class WAVLTree {
 	  }
 	  
 	  
+	  public void clear(){
+		  this.parent = null;
+		  this.right = null;
+		  this.left = null;
+	  }
   } // end of WAVLNode class
 
 }
