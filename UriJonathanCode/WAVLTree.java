@@ -70,6 +70,10 @@ public class WAVLTree {
 	   // empty tree:
 	   if (this.root == null){
 		   this.root = newNode;
+		   this.updateMinInsert(newNode);
+		   this.updateMaxInsert(newNode);
+		   this.treeSize++;
+		   return 0;
 	   }
 	  
 	   WAVLNode parentNode = this.root.nodeSearch(k);
@@ -224,7 +228,7 @@ public class WAVLTree {
     */
    
    public void rotateRight(WAVLNode child, WAVLNode parent) {
-	  System.out.println("I am rotating right!");
+//	  System.out.println("I am rotating right!");
 	   
 	   if(root == parent) {
 		   child.parent = null;
@@ -251,7 +255,7 @@ public class WAVLTree {
    
    public void rotateLeft(WAVLNode parent, WAVLNode child){
 	  
-	   System.out.println("I am rotating left!");
+//	   System.out.println("I am rotating left!");
 	   
 	   if(root == parent) {
 		   child.parent = null;
@@ -539,8 +543,22 @@ public class WAVLTree {
    */
   public int[] keysToArray()
   {
-        int[] arr = new int[42]; // to be replaced by student code
-        return arr;              // to be replaced by student code
+	  	if (this.treeSize == 0){
+	  		return new int[0];
+	  	}
+	  
+        int[] keysArray = new int[this.treeSize];
+        
+        WAVLNode currentNode = this.minNode;
+        keysArray[0] = currentNode.key;
+        
+        for (int i=1; i < this.treeSize; i ++){
+        	currentNode = successorOf(currentNode);
+        	keysArray[i] = currentNode.key;
+        }  
+        
+        return keysArray;
+  
   }
 
   /**
@@ -552,37 +570,85 @@ public class WAVLTree {
    */
   public String[] infoToArray()
   {
-        String[] arr = new String[42]; // to be replaced by student code
-        return arr;                    // to be replaced by student code
+	  	if (this.treeSize == 0){
+	  		return new String[0];
+	  	}
+	  
+        String[] infoArray = new String[this.treeSize];
+        
+        WAVLNode currentNode = this.minNode;
+        infoArray[0] = currentNode.info;
+        
+        for (int i=1; i < this.treeSize; i ++){
+        	currentNode = successorOf(currentNode);
+        	infoArray[i] = currentNode.info;
+        }
+        
+        return infoArray;                   
   }
   
-  private class inOrderIterator {
+//  private class inOrderIterator {
+//	  
+//	  private WAVLNode currentNode = null;
+//	  private WAVLNode lastNode = null;
+//	  
+//	  public inOrderIterator (WAVLNode minNode, WAVLNode maxNode){
+//		  this.currentNode = minNode;
+//		  this.lastNode = maxNode;
+//	  }
+//	  
+//	  public boolean hasNext() {
+//		  if (this.currentNode == this.lastNode){
+//			  return false;
+//		  }
+//		  else {
+//			  return true;
+//		  }
+//	  }
+//	  
+//	  public WAVLNode next(){
+//		  
+//		  
+//	  }
+//	  
+//	  public void remove(){
+//	  }
+//	  
+//  }
+  
+  /*
+   * returns successor of current node. 
+   * if node is max the functions returns node.
+   */
+  
+  public WAVLNode successorOf(WAVLNode node){
 	  
-	  private WAVLNode currentNode = null;
-	  private WAVLNode lastNode = null;
-	  
-	  public inOrderIterator (WAVLNode minNode, WAVLNode maxNode){
-		  this.currentNode = minNode;
-		  this.lastNode = maxNode;
+	  if (node == maxNode){
+		  return node;
 	  }
 	  
-	  public boolean hasNext() {
-		  if (this.currentNode == this.lastNode){
-			  return false;
+	  WAVLNode successor = node;
+	  
+	  // right once and left all the way
+	  if (successor.right != null) {
+		  successor = successor.right;
+		  while (successor.left != null){
+			  successor = successor.left;
 		  }
-		  else {
-			  return true;
+		  return successor;
+	  } 
+	  else // no right child? go up until you are a left child 
+	  { 
+		  while (successor.parent != null){
+			  if (successor == successor.parent.left){
+				  return successor.parent;
+			  } else {
+				  successor = successor.parent;
+			  }
 		  }
 	  }
 	  
-	  public WAVLNode next(){
-		  
-		  
-	  }
-	  
-	  public void remove(){
-	  }
-	  
+	  return successor;
   }
 
  
@@ -615,7 +681,7 @@ public class WAVLTree {
 	  
 	  if (toBeDeletedNode.key == this.minNode.key ){
 		  if (this.root.key != this.minNode.key){
-			  this.minNode = this.minNode.parent;
+			  this.minNode = this.minNode.parent; // TODO min node could have right child
 		  } else {
 			  this.minNode = this.root.right;
 		  }
@@ -631,7 +697,7 @@ public class WAVLTree {
 	  
 	  if (toBeDeletedNode.key == this.maxNode.key ){
 		  if (this.root.key != this.maxNode.key){
-			  this.maxNode = this.maxNode.parent;
+			  this.maxNode = this.maxNode.parent; // TODO max could have left child
 		  } else {
 			  this.maxNode = this.root.left;
 		  }
@@ -650,9 +716,17 @@ public class WAVLTree {
     */
    public int size()
    {
-	   return this.treeSize; // to be replaced by student code
+	   return this.treeSize; 
+   }
+   
+   public WAVLNode getRoot(){
+	   return this.root;
    }
 
+   public int getMinKey(){
+	   return this.minNode.key;
+   }
+   
    public String toStringPreOrder(){
 	   return toStringPreOrderNode(root);
    }
@@ -773,6 +847,7 @@ public class WAVLTree {
 		   
 		   return false;
 	  }
+	  
 	  
   } // end of WAVLNode class
 
