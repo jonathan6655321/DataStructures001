@@ -310,12 +310,13 @@ public class WAVLTree {
 		  return -1;
 	  }
 	  
+	  
 	  this.treeSize--;
 	  updateMinDelete(toBeDeleted);
 	  updateMaxDelete(toBeDeleted);
 	  
-	  if (toBeDeleted == this.root && size() == 1){
-		  this.root = null;
+	  if (toBeDeleted == this.root && this.root.isLeaf()){ //TODO fix bug
+		  this.root = null;		  
 		  return 0;
 	  }
 	  
@@ -421,6 +422,7 @@ public class WAVLTree {
 	  
 	  // two options: terminal or not, depends on the Rank Difference with the parent
 	  if (isUnary){
+		  System.out.println("unary node case entered");
 		  if (this.root == toBeDeleted){
 			  if(hasLeftChild){
 				  this.root = toBeDeleted.left;
@@ -810,7 +812,7 @@ public class WAVLTree {
   private void updateMinDelete(WAVLNode toBeDeletedNode){
 	  if (this.minNode == null){ // trying to delete a node from an empty tree
 		  return;
-	  } else  if (toBeDeletedNode == this.minNode && this.minNode == this.maxNode){
+	  } else  if (toBeDeletedNode == this.minNode && this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
 		  minNode = null;
 		  
 	  } else if (toBeDeletedNode.key == this.minNode.key ){
@@ -823,7 +825,7 @@ public class WAVLTree {
   private void updateMaxDelete(WAVLNode toBeDeletedNode){
 	  if (this.maxNode == null){ // trying to delete a node from an empty tree
 		  return;
-	  } else if (toBeDeletedNode == this.minNode && this.minNode == this.maxNode){
+	  } else if (toBeDeletedNode == this.minNode && this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
 		  minNode = null;
 	  } else if (toBeDeletedNode.key == this.maxNode.key ){
 		  this.maxNode = predOf(this.maxNode);
@@ -850,6 +852,8 @@ public class WAVLTree {
    }
 
    public int getMinKey(){
+
+	   
 	   return this.minNode.key;
    }
    
@@ -864,6 +868,8 @@ public class WAVLTree {
 	    return parent.toString() + " " + toStringPreOrderNode(parent.left) + toStringPreOrderNode(parent.right);
 	   }
    }
+   
+   
   /**
    * public class WAVLNode
    *
@@ -963,9 +969,13 @@ public class WAVLTree {
 	  }
 	  
 	  public boolean isUnary() {
-		   if (this.left==null ^ this.right==null){
+		   if (this.left==null && this.right!=null){
 			   return true;
 		   }
+		   if (this.left!=null && this.right==null){
+			   return true;
+		   }
+		   
 		   
 		   return false;
 	  }

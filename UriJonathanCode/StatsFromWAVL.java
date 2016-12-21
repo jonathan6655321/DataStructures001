@@ -25,14 +25,11 @@ public class StatsFromWAVL {
 			
 			int currentMinKey;
 			while (tree.getRoot() != null){
-				if ( tree.getRoot().key == 98){
+				if ( tree.getRoot().key >= 98){
 					System.out.println(tree.toStringPreOrder());
-					System.out.println(tree.getRoot().right);
-					System.out.println(tree.getMinKey());
 				}
 				currentMinKey = tree.getMinKey();
 				System.out.println(currentMinKey);
-				System.out.println(tree.getMinKey());
 				deleteOperationNum += tree.delete(currentMinKey);
 			}
 			
