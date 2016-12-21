@@ -1,9 +1,9 @@
-
+package UriJonathanCode;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.TreeSet;
 
-public class TesterGal {
+public class test {
 
 	public static void main(String[] args) throws Exception {
 		WAVLTree t = new WAVLTree();
@@ -31,8 +31,8 @@ public class TesterGal {
 		maxIns[i-1]=o;
 		}
 		for (Integer integer : l)
-		{
-		int o = t.delete(integer);
+		{//			System.out.println(integer);			System.out.println(integer);		//			try{	
+		int o = t.delete(integer);//		}//		catch(NullPointerException npe){//			System.out.println(integer);//		 o = t.delete(integer);//		}
 		//WAVLTree.printBinaryTree(t.getRoot(), 0);
 		//if(!isWAVL(t.getRoot()))
 		//{
@@ -51,15 +51,15 @@ public class TesterGal {
 		System.out.println("Mission Completed");
 		}
 
-	public static boolean isWAVL(WAVLTree.WAVLNode n)
-		{
-		// getRankDifference == RightSon.rank - LeftSon.rank
-		boolean d = Math.abs(n.getRankDiff(n.getRight())) < 2;
-		d = d && n.getRank() - n.getLeft().getRank() <=2 && n.getRank() - n.getRight().getRank()<=2;
-		if(d && !(n.getLeft() == null))
-		d = d && isWAVL(n.getLeft());
-		if(d && !(n.getRight() == null))
-		d = d && isWAVL(n.getRight());
-		return d;
-		}
+//	public static boolean isWAVL(WAVLTree.WAVLNode n)//
+//		{//
+//		// getRankDifference == RightSon.rank - LeftSon.rank//
+//		boolean d = Math.abs(n.getRankDiff(n.getRight())) < 2;//
+//		d = d && n.getRank() - n.getLeft().getRank() <=2 && n.getRank() - n.getRight().getRank()<=2;//
+//		if(d && !(n.getLeft() == null))//
+//		d = d && isWAVL(n.getLeft());//
+//		if(d && !(n.getRight() == null))//
+//		d = d && isWAVL(n.getRight());//
+//		return d;//
+//		}
 }
