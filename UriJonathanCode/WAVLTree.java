@@ -4,14 +4,31 @@ import java.util.Iterator;
 
 import UriJonathanCode.WAVLTree.WAVLNode;
 
+/*
+ * Comments: 
+ * 
+ * when referring to n - n is the number of nodes in the tree, its size.
+ * 
+ * each functions complexity is written in its description. 
+ * even if this complexity is used in the analyisis of a bigger function
+ */
+
+
+
+
+
+
+
 /**
  *
  *Uri and Jonathan
  *
  * WAVLTree
  *
- * An implementation of a WAVL Tree with
- * distinct integer keys and info
+ * An implementation of a WAVL Tree with distinct integer keys and info.
+ * WAVLTree also holds pointers to nodes: root, maxNode, minNode. (Updated upon insert and delete). 
+ * A variable treeSize: holds the tree size. (Updated upon insert and delete)
+ * 
  *
  */
 
@@ -29,18 +46,23 @@ public class WAVLTree {
   /**
    * public boolean empty()
    *
-   * returns true if and only if the tree is empty
-   *
+   * returns true if and only if the tree is empty.
+   * 
+   * Complexity = O(1):
+   * single access to existing pointer.
    */
   public boolean empty() {
-    return (root == null);
+    return (this.root == null);
   }
 
  /**
    * public String search(int k)
    *
-   * returns the info of an item with key k if it exists in the tree
-   * otherwise, returns null
+   * returns the info of an item with key k if it exists in the tree, otherwise, returns null
+   * 
+   * Complexity = O(log n):
+   * O(1) operations + a call to nodeSearch which performs at O(log n)  .
+   * 
    */
   public String search(int k)
   {
@@ -53,17 +75,35 @@ public class WAVLTree {
 		  return foundNode.info;
 	  }
 	  
-	  return null;  // to be replaced by student code
+	  return null;  
   }
 
   
   /**
    * public int insert(int k, String i)
    *
+   *
    * inserts an item with key k and info i to the WAVL tree.
    * the tree must remain valid (keep its invariants).
    * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
    * returns -1 if an item with key k already exists in the tree.
+   * 
+   * Description: 
+   * deals with empty tree case first. 
+   * searches for place to insert node. 
+   * updates min max and treeSize
+   * promotes and rebalances if needed. 
+   * 
+   * 
+   * Complexity = O(log n):
+   * 
+   * at most 1 call to updateMinInsert = O(1)  
+   * at most 1 call to updateMaxInsert = O(1)  
+   * 1 call to nodeSearch = O(log n)  
+   * at most 1 call to promote = O(1)  
+   * 1 call to rebalanceAfterPromoting = O(log n)  
+   * 
+   * 
    */
    public int insert(int k, String i) {
 	   
@@ -114,8 +154,20 @@ public class WAVLTree {
    /*
     * after insertion:
     * rebalances tree starting from given node
-    * assumes both subtrees of node are valid
+    * assumes both subtrees of node are valid (in each recursive call we make sure this is satisfied)
     * returns total number of rotations + promotions (no demotions in this case) 
+    * 
+    * Description:
+    * recursive function.
+    * follows cases from slides (WAVL lecture)
+    * 
+    * Complexity = O(log n):
+    * rotations are terminal cases, and are called O(1) times. each costs O(1) operations.  
+    * demote can be called O(1) times and costs O(1) and happens only in terminal cases.  
+    * each recursive call does O(1) calls to rankDifference and isLeftChild both have O(1) complexity.  
+    * 
+    * after each promote we recurse on a node higher (by at least 1) than the previous node.
+    * O(log n) promotions each at O(1) complexity.
     */
    public int rebalanceAfterPromoting(WAVLNode node) {
 	   
@@ -193,7 +245,10 @@ public class WAVLTree {
    
    
    /*
+    * returns the rank difference between parent node and its child.
     * 
+    *  Complexity = O(1):
+    *  easy access to fields of nodes we have pointers to and some basic calculations. 
     */
    public static int rankDifference(WAVLNode parent, WAVLNode child){
 	   
@@ -208,27 +263,16 @@ public class WAVLTree {
 	   }
 	   
 	   return parent.rank - child.rank;
-   
-//   new variation: 
-//	   if(child == null){
-//		   if((parent.right != null) || (parent.left!=null)){
-//			   return 2;
-//		   } else {
-//			   return 1;
-//		   }
-//		   
-//	   }
-//	   return child.rankDifferenceFromParent;
-   
    }
    
    
    
    /*
-    * @pre: child isn't root
-    * child is the left child of parent
+    * changes pointers according to rotation guidelines.
+    * 
+    * Complexity = O(1):
+    * constant number of operations.
     */
-   
    public void rotateRight(WAVLNode child, WAVLNode parent) {
 //	  System.out.println("I am rotating right!");
 	   
@@ -255,6 +299,13 @@ public class WAVLTree {
 	   
    }
    
+   
+   /*
+    * changes pointers according to rotation guidelines.
+    * 
+    * Complexity = O(1):
+    * constant number of operations.
+    */
    public void rotateLeft(WAVLNode parent, WAVLNode child){
 	  
 //	   System.out.println("I am rotating left!");
@@ -292,9 +343,26 @@ public class WAVLTree {
    * returns -1 if an item with key k was not found in the tree.
    * 
    * 
-   * for us:
-   * update min max
-   * update size
+   * Description: 
+   * if needed replaces node with its successor. 
+   * updates min max root and size
+   * follows delete guidelines from WAVL lecture.
+   * 
+   * 
+   * Complexity = O(log n):
+   * 
+   * at most 1 call to updateMinInsert = O(1)
+   * at most 1 call to updateMaxInsert = O(1)  
+   * 1 call to nodeSearch = O(log n)  
+   * O(1) calls to isUnary and to isLeaf = O(1)  
+   * O(1) calls to isLeftChild and to hasLeftChild = O(1)  
+   * O(1) calls to demote = O(1)  
+   * O(1) calls to clear = O(1)  
+   * 1 call to rebalanceAfterDeletion = O(log n)  
+   * 1 call to successorOf = O(log n)  
+   * long block of code for replacing node with successor if needed = O(1)
+   * 
+   * 
    */
    public int delete(int k)
    {
@@ -328,7 +396,9 @@ public class WAVLTree {
 	  boolean isLeaf = toBeDeleted.isLeaf();
 	  boolean isUnary = toBeDeleted.isUnary();
 	 
+	 
 	  
+	  // need to replace node with its successor.
 	  if (!isLeaf && !isUnary){ //toBeDeleted is not a leaf nor an unary node
 		  WAVLNode successor;
 		  successor = successorOf(toBeDeleted);
@@ -398,10 +468,10 @@ public class WAVLTree {
 	
 	  
 	  // now - toBeDeleted is the node to delete.. 
-	  isLeaf = toBeDeleted.isLeaf(); // TODO must be one of these exactly.. 
+	  isLeaf = toBeDeleted.isLeaf(); // must be one of these exactly.. 
 	  isUnary = toBeDeleted.isUnary();
-	  boolean hasLeftChild = toBeDeleted.hasLeftChild(); // TODO doesnt have.. 
-	  WAVLNode parentNode = toBeDeleted.parent; // TODO could be null
+	  boolean hasLeftChild = toBeDeleted.hasLeftChild();
+	  WAVLNode parentNode = toBeDeleted.parent; // could be null
 	  boolean isLeftChild = toBeDeleted.isLeftChild();
 	  
 	  // terminal case 1: toBeDeleted and his sister are both leafs
@@ -438,7 +508,7 @@ public class WAVLTree {
 		  }
 		  if (hasLeftChild && isLeftChild){ 
 			  toBeDeleted.left.parent = parentNode;
-			  parentNode.left = toBeDeleted.left;		// TODO if is unary root will yell	  
+			  parentNode.left = toBeDeleted.left;
 		  }
 		  else if (hasLeftChild && !isLeftChild){
 			  toBeDeleted.left.parent = parentNode;
@@ -473,13 +543,13 @@ public class WAVLTree {
 		  }
 		  toBeDeleted.clear();
 		  
-		  parentNode.demote(); // TODO should send father of parent node?
+		  parentNode.demote(); 
 		  countActions++;
 		  
 		  if (parentNode.parent == null){
 			  return 1;
 		  } else {
-			  parentNode = parentNode.parent;
+			  parentNode = parentNode.parent; // in order to send father of parent node
 		  }
 	  }
 	  
@@ -496,7 +566,22 @@ public class WAVLTree {
 	  
 	  return countActions + rebalanceAfterDeletion(parentNode);
    }
-
+	/*
+	 * Description:
+	 * follows cases from WAVL lecture
+	 * 
+	 * Complexity: O(log n)
+	 * O(1) calls to rankDifferece each recursive call at cost of O(1)
+	 * O(1) calls to demote and to premote each recursive call at cost of O(1) 
+	 * O(1) calls to rotateRight and to rotateLeft each recursive call O(1)
+	 * O(1) calls to isLeaf
+	 * 
+	 * the function recurses O(log n) times because in each recursive call we recurse at node of 
+	 * height higher by 1 at least.
+	 * 
+	 * in total O(log n) calls of O(1). 
+	 * 
+	 */
    public int rebalanceAfterDeletion(WAVLNode parentNode) {
 	   
 	   
@@ -605,6 +690,7 @@ public class WAVLTree {
 		   }
 	   }   
 	   
+	   // if no case entered the tree is valid and stop condition met.
 	   return 0;
    }
    
@@ -613,8 +699,11 @@ public class WAVLTree {
    /**
     * public String min()
     *
-    * Returns the i×nfo of the item with the smallest key in the tree,
+    * Returns the info of the item with the smallest key in the tree,
     * or null if the tree is empty
+    * 
+    * Complexity = O(1):
+    * simple access to node we have a pointer to
     */
    public String min()
    {
@@ -630,6 +719,9 @@ public class WAVLTree {
     *
     * Returns the info of the item with the largest key in the tree,
     * or null if the tree is empty
+    * 
+    * Complexity = O(1):
+    * simple access to node we have a pointer to
     */
    public String max()
    {
@@ -648,21 +740,14 @@ public class WAVLTree {
    */
   public int[] keysToArray()
   {
-	  	if (this.treeSize == 0){
-	  		return new int[0];
-	  	}
+	  int[] keysArray = new int[this.size()];
+	  WAVLNode[] nodeArray = nodeArray();
 	  
-        int[] keysArray = new int[this.treeSize];
+	  for (int i=0; i<nodeArray.length; i++){
+		  keysArray[i] = nodeArray[i].key;
+	  }
         
-        WAVLNode currentNode = this.minNode;
-        keysArray[0] = currentNode.key;
-        
-        for (int i=1; i < this.treeSize; i ++){
-        	currentNode = successorOf(currentNode);
-        	keysArray[i] = currentNode.key;
-        }  
-        
-        return keysArray;
+        return keysArray;  
   
   }
 
@@ -675,55 +760,63 @@ public class WAVLTree {
    */
   public String[] infoToArray()
   {
-	  	if (this.treeSize == 0){
-	  		return new String[0];
-	  	}
 	  
-        String[] infoArray = new String[this.treeSize];
-        
-        WAVLNode currentNode = this.minNode;
-        infoArray[0] = currentNode.info;
-        
-        for (int i=1; i < this.treeSize; i ++){
-        	currentNode = successorOf(currentNode);
-        	infoArray[i] = currentNode.info;
-        }
+	  String[] infoArray = new String[this.size()];
+	  WAVLNode[] nodeArray = nodeArray();
+	  
+	  for (int i=0; i<nodeArray.length; i++){
+		  infoArray[i] = nodeArray[i].info;
+	  }
         
         return infoArray;                   
   }
   
-//  private class inOrderIterator {
-//	  
-//	  private WAVLNode currentNode = null;
-//	  private WAVLNode lastNode = null;
-//	  
-//	  public inOrderIterator (WAVLNode minNode, WAVLNode maxNode){
-//		  this.currentNode = minNode;
-//		  this.lastNode = maxNode;
-//	  }
-//	  
-//	  public boolean hasNext() {
-//		  if (this.currentNode == this.lastNode){
-//			  return false;
-//		  }
-//		  else {
-//			  return true;
-//		  }
-//	  }
-//	  
-//	  public WAVLNode next(){
-//		  
-//		  
-//	  }
-//	  
-//	  public void remove(){
-//	  }
-//	  
-//  }
+  
+  
+  
+  public WAVLNode[] nodeArray(){
+	  final WAVLNode[] nodeArray = new WAVLNode[this.size()];
+	  
+	  WAVLNode node = this.root;
+	  
+	 class recursiveNodeToArrayClass {
+		 
+		 private int i = 0;
+		 
+		 private void recursiveNodeToArray(WAVLNode node){
+			 
+			 if (node == null){
+				 return;
+			 }
+			 
+			 recursiveNodeToArray(node.left);
+			 nodeArray[this.i] = node;
+			 this.i++;
+			 recursiveNodeToArray(node.right);
+			 
+			 return;
+		 }
+		 
+		 
+	 }
+
+	 recursiveNodeToArrayClass A = new recursiveNodeToArrayClass();
+	 A.recursiveNodeToArray(this.root);
+	  return nodeArray;
+  }
+  
   
   /*
    * returns successor of current node. 
    * if node is max the functions returns node.
+   * 
+   * 
+   * Complexity: O(log n)
+   * case 1: node has a right child -->  right once and left all the way
+   * worst case: O(log n), for successor of root.
+   * case 2: node does not have a right child --> go up until you are a left child, return your parent
+   * worst caseL O(log n), for successor of leaf.
+   * 
    */
   
   public WAVLNode successorOf(WAVLNode node){
@@ -788,6 +881,13 @@ public class WAVLTree {
 	  return pred;
   }
  
+  
+  /*
+   * updates this.minNode according to key of inserted node and key of minNode if exists.
+   * 
+   * Complexity = O(1):
+   * constant number of operations.
+   */
   private void updateMinInsert(WAVLNode insertedNode){
 	  if (this.minNode == null){
 		  this.minNode = insertedNode;
@@ -799,6 +899,12 @@ public class WAVLTree {
 	  return;
   }
   
+  /*
+   * updates this.maxNode according to key of inserted node and key of maxNode if exists.
+   * 
+   * Complexity = O(1):
+   * constant number of operations.
+   */
   private void updateMaxInsert(WAVLNode insertedNode){
 	  if (this.maxNode == null){
 		  this.maxNode = insertedNode;
@@ -922,9 +1028,19 @@ public class WAVLTree {
 	  }
 	  
 	  /*
-	   * recursively searches subtree starting from node
-	   * returns the node with the given key
-	   * or parent of that node if no node with such key exists
+	   * recursively searches subtree starting from node. returns the node with the given key
+	   * if it exists. If no such node exits return last node found. 
+	   * (this is useful for inserts where this last node will be the parent of the to be inserted node)
+	   * 
+	   * Complexity = O(log n):
+	   * As known, height of a WAVLTree is log n. nodeSearch initial call starts on a WAVLNode
+	   * whose maximum height is log n.
+	   * 
+	   * first of all each call to the function makes O(1) actions and possibly a recursive call. we will analyze the
+	   * number of these calls.
+	   * each recursive call is made on a node of height smaller (by at least 1) than the previous node. 
+	   * stop condition is reached when we call on an external leaf or found the key. 
+	   * in total O(log n) calls. 
 	   */
 	  public WAVLNode nodeSearch(int key){
 //		  System.out.println("Searching for "+key+", current node: "+this.key);
@@ -955,6 +1071,10 @@ public class WAVLTree {
   
 	  /*
 	   * promotes
+	   * 
+	   * increase rank of node by 1
+	   * 
+	   * Complexity = O(1)
 	   */
 	  public void promote(){
 		  this.rank += 1;
@@ -962,14 +1082,20 @@ public class WAVLTree {
 	  
 	  /*
 	   * demotes
+	   * 
+	   * decrease rank of node by 1
+	   * 
+	   * Complexity = O(1)
 	   */
 	  public void demote(){
 		  this.rank -= 1;
 	  }
 	  
 	  
-	  /*
-	   * precondition - node is not root.
+	  /* 
+	   * 
+	   * Complexity = O(1):
+	   * constant number of operations.
 	   */
 	  public boolean isLeftChild() {
 		  if (this.parent == null){
@@ -983,6 +1109,11 @@ public class WAVLTree {
 		   return false;
 	  }
 	  
+	  /*
+	   * checks if both children are external leaves.
+	   * 
+	   * Complexity = O(1)
+	   */
 	  public boolean isLeaf() {
 		   if (this.left==null && this.right==null){
 			   return true;
@@ -991,6 +1122,11 @@ public class WAVLTree {
 		   return false;
 	  }
 	  
+	  /*
+	   * checks if exactly on of its children is an external leave.
+	   * 
+	   * Complexity = O(1)
+	   */
 	  public boolean isUnary() {
 		   if (this.left==null && this.right!=null){
 			   return true;
@@ -1003,6 +1139,9 @@ public class WAVLTree {
 		   return false;
 	  }
 	  
+	  /*
+	   * Complexity = O(1)
+	   */
 	  public boolean hasLeftChild() {
 		   if (this.left != null){
 			   return true;
@@ -1011,7 +1150,11 @@ public class WAVLTree {
 		   return false;
 	  }
 	  
-	  
+	  /*
+	   * nulls all pointers to parent, right, left.
+	   * 
+	   * Complexity O(1)
+	   */
 	  public void clear(){
 		  this.parent = null;
 		  this.right = null;

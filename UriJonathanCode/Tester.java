@@ -82,7 +82,9 @@ public class Tester {
 		System.out.println(tree1.toStringPreOrder());
 
 
-
+		System.out.println(Arrays.deepToString(tree1.nodeArray()));
+		System.out.println(Arrays.deepToString(tree1.infoToArray()));
+		System.out.println(Arrays.toString(tree1.keysToArray()));
 	}
 	
 	
