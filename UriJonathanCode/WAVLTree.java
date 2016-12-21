@@ -2,6 +2,8 @@ package UriJonathanCode;
 
 import java.util.Iterator;
 
+import UriJonathanCode.WAVLTree.WAVLNode;
+
 /**
  *
  *Uri and Jonathan
@@ -193,7 +195,7 @@ public class WAVLTree {
    /*
     * 
     */
-   public int rankDifference(WAVLNode parent, WAVLNode child){
+   public static int rankDifference(WAVLNode parent, WAVLNode child){
 	   
 	   if (parent == null){
 		   return -1;
@@ -422,7 +424,6 @@ public class WAVLTree {
 	  
 	  // two options: terminal or not, depends on the Rank Difference with the parent
 	  if (isUnary){
-		  System.out.println("unary node case entered");
 		  if (this.root == toBeDeleted){
 			  if(hasLeftChild){
 				  this.root = toBeDeleted.left;
@@ -868,6 +869,28 @@ public class WAVLTree {
 	    return parent.toString() + " " + toStringPreOrderNode(parent.left) + toStringPreOrderNode(parent.right);
 	   }
    }
+   
+   
+	public static boolean hasValidRanks(WAVLNode root){
+		
+		if (root == null){
+			return true;
+		}
+		
+		if (root.isLeaf()){
+			if (rankDifference(root,root.left) == 1 && rankDifference(root,root.right) == 1 ){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if(rankDifference(root,root.left) > 2 || rankDifference(root,root.right) > 2 ){
+				return false;
+			}
+		}
+		
+		return hasValidRanks(root.left) && hasValidRanks(root.right);
+	}
    
    
   /**
