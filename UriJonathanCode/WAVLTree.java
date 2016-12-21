@@ -17,7 +17,7 @@ import UriJonathanCode.WAVLTree.WAVLNode;
 
 public class WAVLTree {
 
-	private WAVLNode root = null;
+	public WAVLNode root = null;
 	private WAVLNode minNode = null;
 	private WAVLNode maxNode = null;
 	private int treeSize = 0;
@@ -317,7 +317,7 @@ public class WAVLTree {
 	  updateMinDelete(toBeDeleted);
 	  updateMaxDelete(toBeDeleted);
 	  
-	  if (toBeDeleted == this.root && this.root.isLeaf()){ //TODO fix bug
+	  if (toBeDeleted == this.root && this.root.isLeaf()){ 
 		  this.root = null;		  
 		  return 0;
 	  }
@@ -871,25 +871,25 @@ public class WAVLTree {
    }
    
    
-	public static boolean hasValidRanks(WAVLNode root){
+	public static boolean hasValidRanks(WAVLNode currentRoot){
 		
-		if (root == null){
+		if (currentRoot == null){
 			return true;
 		}
 		
-		if (root.isLeaf()){
-			if (rankDifference(root,root.left) == 1 && rankDifference(root,root.right) == 1 ){
+		if (currentRoot.isLeaf()){
+			if (rankDifference(currentRoot,currentRoot.left) == 1 && rankDifference(currentRoot,currentRoot.right) == 1 ){
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			if(rankDifference(root,root.left) > 2 || rankDifference(root,root.right) > 2 ){
+			if(rankDifference(currentRoot,currentRoot.left) > 2 || rankDifference(currentRoot,currentRoot.right) > 2 ){
 				return false;
 			}
 		}
 		
-		return hasValidRanks(root.left) && hasValidRanks(root.right);
+		return hasValidRanks(currentRoot.left) && hasValidRanks(currentRoot.right);
 	}
    
    
