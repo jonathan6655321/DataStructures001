@@ -550,7 +550,8 @@ public class WAVLTree {
 		  if (parentNode.parent == null){
 			  return 1;
 		  } else {
-			  parentNode = parentNode.parent; // in order to send father of parent node
+//			  parentNode = parentNode.parent; // in order to send father of parent node
+			  return countActions + rebalanceAfterDeletion(parentNode.parent);
 		  }
 	  }
 	  
@@ -977,7 +978,7 @@ public class WAVLTree {
 	  if (this.root == null){ // trying to delete a node from an empty tree
 		  return;
 	  } else if (this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
-		  maxNode = null;
+		  this.maxNode = null;
 	  } else if (toBeDeletedNode == this.maxNode ){
 		  this.maxNode = predOf(toBeDeletedNode);
 	  }

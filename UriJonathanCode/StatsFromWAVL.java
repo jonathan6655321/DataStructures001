@@ -52,15 +52,15 @@ public class StatsFromWAVL {
 			
 			
 			
-//			ArrayList<Integer> randomKeysDel = getRandomKeysArray(multiple);
-//			
-//			for(int i: randomKeysDel ){
-//				temp = tree.delete(i);
-//				if ( temp > maxDeleteOps){
-//					maxDeleteOps = temp;
-//				}
-//				deleteOperationNum += temp;
-//			}
+			ArrayList<Integer> randomKeysDel = getRandomKeysArray(multiple);
+			
+			for(int i: randomKeysDel ){
+				temp = tree.delete(i);
+				if ( temp > maxDeleteOps){
+					maxDeleteOps = temp;
+				}
+				deleteOperationNum += temp;
+			}
 //			
 //			int[] array = new int[multiple*SIZE];
 //			int current
@@ -70,23 +70,16 @@ public class StatsFromWAVL {
 //			}
 			
 			
-			int currentMinKey;
-			while (tree.getRoot() != null){
-//				if ( tree.getRoot().key >= 98){
-//					System.out.println(tree.toStringPreOrder());
+//			int currentMinKey;
+//			
+//			while (tree.getRoot() != null){
+//				currentMinKey = tree.getMinKey();
+//				temp = tree.delete(currentMinKey);
+//				if ( temp > maxDeleteOps){
+//					maxDeleteOps = temp;
 //				}
-				currentMinKey = tree.getMinKey();
-				if ( currentMinKey == 1){
-//					System.out.println("toBeDeletedNode == this.minNode"+(toBeDeletedNode == this.minNode));
-					System.out.println("minNode.key = "+tree.minNode.key+", minNode.isLeaf = "+tree.minNode.isLeaf()+", tree.search(1)="+tree.search(1));
-					System.out.println("is the min the max" + (tree.minNode == tree.maxNode));
-				}
-////				System.out.println(tree.minNode.isLeaf());
-//				System.out.println("minNode.key = "+tree.minNode.key+", minNode.isLeaf = "+tree.minNode.isLeaf()+", tree.search(1)="+tree.search(1));
-////				System.out.println(currentMinKey);
-//				System.out.println("is the min the max" + (tree.minNode == tree.maxNode));
-				deleteOperationNum += tree.delete(currentMinKey);
-			}
+//				deleteOperationNum += temp;
+//			}
 			
 			System.out.println(tree.getRoot());
 			System.out.println("tree size after deletion is: " + tree.size());
