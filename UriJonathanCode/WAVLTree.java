@@ -35,8 +35,8 @@ import UriJonathanCode.WAVLTree.WAVLNode;
 public class WAVLTree {
 
 	public WAVLNode root = null;
-	private WAVLNode minNode = null;
-	private WAVLNode maxNode = null;
+	public WAVLNode minNode = null;
+	public WAVLNode maxNode = null;
 	private int treeSize = 0;
 	
 	public WAVLTree() {
@@ -351,8 +351,8 @@ public class WAVLTree {
    * 
    * Complexity = O(log n):
    * 
-   * at most 1 call to updateMinInsert = O(1)
-   * at most 1 call to updateMaxInsert = O(1)  
+   * at most 1 call to updateMinDelete = O(1)
+   * at most 1 call to updateMaxDelete = O(1)  
    * 1 call to nodeSearch = O(log n)  
    * O(1) calls to isUnary and to isLeaf = O(1)  
    * O(1) calls to isLeftChild and to hasLeftChild = O(1)  
@@ -368,6 +368,7 @@ public class WAVLTree {
    {
 	   // empty tree
 	   if (root == null){
+		   System.out.println("aaaa");
 		   return -1; 
 	   }
 		  
@@ -377,6 +378,7 @@ public class WAVLTree {
 	  
 	  // there is no node with the key k
 	  if (toBeDeleted.key != k){
+		  System.out.println("bbbb");
 		  return -1;
 	  }
 	  
@@ -839,7 +841,7 @@ public class WAVLTree {
   public WAVLNode successorOf(WAVLNode node){
 	  
 	  if (node == this.maxNode){
-		  return node;
+		  return null; // TODO did this do something wrong? 
 	  }
 	  
 	  WAVLNode successor = node;
@@ -863,7 +865,7 @@ public class WAVLTree {
 		  }
 	  }
 	  
-	  return successor;
+	  return null;
   }
 
   
@@ -881,7 +883,7 @@ public class WAVLTree {
   public WAVLNode predOf(WAVLNode node){
 	  
 	  if (node == this.minNode){
-		  return node;
+		  return null; // TODO
 	  }
 	  
 	  WAVLNode pred = node;
@@ -905,7 +907,7 @@ public class WAVLTree {
 		  }
 	  }
 	  
-	  return pred;
+	  return null;
   }
  
   
@@ -951,13 +953,13 @@ public class WAVLTree {
    * single call to isLeaf = O(1)
    */
   private void updateMinDelete(WAVLNode toBeDeletedNode){
-	  if (this.minNode == null){ // trying to delete a node from an empty tree
+	  if (this.root == null){ // trying to delete a node from an empty tree
 		  return;
-	  } else  if (toBeDeletedNode == this.minNode && this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
-		  minNode = null;
+	  } else  if (this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
+		  this.minNode = null;
 		  
-	  } else if (toBeDeletedNode.key == this.minNode.key ){
-		  this.minNode = successorOf(minNode);
+	  } else if (toBeDeletedNode == this.minNode ){
+		  this.minNode = successorOf(toBeDeletedNode);
 	  }
 	  
 	  return;
@@ -972,12 +974,12 @@ public class WAVLTree {
    * single call to isLeaf = O(1)
    */
   private void updateMaxDelete(WAVLNode toBeDeletedNode){
-	  if (this.maxNode == null){ // trying to delete a node from an empty tree
+	  if (this.root == null){ // trying to delete a node from an empty tree
 		  return;
-	  } else if (toBeDeletedNode == this.minNode && this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
-		  minNode = null;
-	  } else if (toBeDeletedNode.key == this.maxNode.key ){
-		  this.maxNode = predOf(this.maxNode);
+	  } else if (this.root == toBeDeletedNode && toBeDeletedNode.isLeaf()){
+		  maxNode = null;
+	  } else if (toBeDeletedNode == this.maxNode ){
+		  this.maxNode = predOf(toBeDeletedNode);
 	  }
 	  
 	  return;
