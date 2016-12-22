@@ -1,16 +1,13 @@
 package UriJonathanCode;
 
-import java.util.Iterator;
-
-import UriJonathanCode.WAVLTree.WAVLNode;
 
 /*
  * Comments: 
  * 
- * when referring to n - n is the number of nodes in the tree, its size.
+ * when referring to n:  n is the number of nodes in the tree, its size.
  * 
- * each functions complexity is written in its description. 
- * even if this complexity is used in the analyisis of a bigger function
+ * each functions complexity is written and analyzed in its own description. 
+ * 
  */
 
 
