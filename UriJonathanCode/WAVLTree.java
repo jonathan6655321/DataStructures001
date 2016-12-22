@@ -737,6 +737,10 @@ public class WAVLTree {
    *
    * Returns a sorted array which contains all keys in the tree,
    * or an empty array if the tree is empty.
+   * Complexity = O(n): 
+   * 1 call to nodeArray = O(n)
+   * 1 iteration the n lengthed array of nodes O(n)
+   * 
    */
   public int[] keysToArray()
   {
@@ -757,6 +761,11 @@ public class WAVLTree {
    * Returns an array which contains all info in the tree,
    * sorted by their respective keys,
    * or an empty array if the tree is empty.
+   * 
+   * Complexity = O(n):
+   * 1 call to nodeArray = O(n)
+   * 1 iteration the n lengthed array of nodes O(n)
+   * 
    */
   public String[] infoToArray()
   {
@@ -773,7 +782,16 @@ public class WAVLTree {
   
   
   
-  
+  /*
+   * returns an in-order (according to keys) array of WAVLNodes
+   * 
+   * Description:
+   * does an in order recursive traversal of the tree while adding the nodes to 
+   * an array of size n.
+   * 
+   * Complexity = O(n):
+   * single recursive call per node and external leaf. O(1) operations per call. 
+   */
   public WAVLNode[] nodeArray(){
 	  final WAVLNode[] nodeArray = new WAVLNode[this.size()];
 	  
@@ -808,14 +826,14 @@ public class WAVLTree {
   
   /*
    * returns successor of current node. 
-   * if node is max the functions returns node.
+   * if node is max the function returns node.
    * 
    * 
    * Complexity: O(log n)
    * case 1: node has a right child -->  right once and left all the way
    * worst case: O(log n), for successor of root.
    * case 2: node does not have a right child --> go up until you are a left child, return your parent
-   * worst caseL O(log n), for successor of leaf.
+   * worst caseL O(log n), for successor of leaf which is predeccessor of root
    * 
    */
   
@@ -850,7 +868,17 @@ public class WAVLTree {
   }
 
   
-  
+  /*
+   * returns the predeccessor of the node received. 
+   * if the node is the minimum node - function returns node.
+   * 
+   * Complexity: O(log n)
+   * case 1: node has a left child -->  left once and right all the way
+   * worst case: O(log n), for predeccessor of root.
+   * case 2: node does not have a left child --> go up until you are a right child, return your parent
+   * worst caseL O(log n), for predeccessor of leaf which is successor of root.
+   * 
+   */
   public WAVLNode predOf(WAVLNode node){
 	  
 	  if (node == this.minNode){
@@ -915,7 +943,14 @@ public class WAVLTree {
 	  }
 	  return;
   }
-  
+
+  /*
+   * updates maxNode according to key of node inserted
+   * 
+   * Complexity = O(log n):
+   * single call to successorOf = O(log n)
+   * single call to isLeaf = O(1)
+   */
   private void updateMinDelete(WAVLNode toBeDeletedNode){
 	  if (this.minNode == null){ // trying to delete a node from an empty tree
 		  return;
@@ -929,6 +964,14 @@ public class WAVLTree {
 	  return;
   }
   
+  
+  /*
+   * updates maxNode according to key of node inserted
+   * 
+   * Complexity = O(log n):
+   * single call to predOf = O(log n)
+   * single call to isLeaf = O(1)
+   */
   private void updateMaxDelete(WAVLNode toBeDeletedNode){
 	  if (this.maxNode == null){ // trying to delete a node from an empty tree
 		  return;
@@ -946,29 +989,39 @@ public class WAVLTree {
     *
     * Returns the number of nodes in the tree.
     *
-    * precondition: none
-    * postcondition: none
+    *Complexity = O(1)
     */
    public int size()
    {
 	   return this.treeSize; 
    }
    
-   public WAVLNode getRoot(){
+   
+   /*
+    * helper function for us
+    * 
+    * Complexity = O(1)
+    */
+   public WAVLNode getRoot(){ 
 	   return this.root;
    }
 
-   public int getMinKey(){
-
-	   
+   // TODO delete this
+   public int getMinKey(){   
 	   return this.minNode.key;
    }
    
-   public String toStringPreOrder(){
-	   return toStringPreOrderNode(root);
+   /*
+    * helper function for us do not check
+    */
+   public static String toStringPreOrder(WAVLNode rootOfTree){
+	   return toStringPreOrderNode(rootOfTree);
    }
-   
-   public String toStringPreOrderNode(WAVLNode parent){
+
+   /*
+    * helper function for us do not check
+    */
+   public static String toStringPreOrderNode(WAVLNode parent){
 	   if (parent == null){
 	    return "";
 	   } else {
@@ -976,7 +1029,9 @@ public class WAVLTree {
 	   }
    }
    
-   
+   /*
+    * helper function for us do not check
+    */
 	public static boolean hasValidRanks(WAVLNode currentRoot){
 		
 		if (currentRoot == null){
@@ -1012,7 +1067,6 @@ public class WAVLTree {
 	  public String info;
 	  public int key;
 	  public int rank = 0;
-//	  public int rankDifferenceFromParent = 
 	  
 	  public WAVLNode parent;
 	  public WAVLNode left;
@@ -1023,6 +1077,9 @@ public class WAVLTree {
 		  this.key = key;  
 	  }
 	  
+	  /*
+	   * Complexity = O(1)
+	   */
 	  public String toString(){
 		  return "(" + key + ":" + info + ")";
 	  }
