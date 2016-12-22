@@ -1,9 +1,12 @@
 package UriJonathanCode;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 
 import javax.print.attribute.HashPrintServiceAttributeSet;
+
+
 
 public class StatsFromWAVL {
 	

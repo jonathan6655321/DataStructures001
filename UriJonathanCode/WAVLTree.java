@@ -1010,8 +1010,10 @@ public class WAVLTree {
 	   return this.minNode.key;
    }
    
+   // TODO delete all of these!!!
+   
    /*
-    * helper function for us do not check
+    * helper function for us do not check 
     */
    public  String toStringPreOrder(){
 	   return toStringPreOrderNode(root);
@@ -1056,10 +1058,10 @@ public class WAVLTree {
   /**
    * public class WAVLNode
    *
-   * If you wish to implement classes other than WAVLTree
-   * (for example WAVLNode), do it in this file, not in 
-   * another file.
-   * This is an example which can be deleted if no such classes are necessary.
+   * Each instance is a node in the WAVL tree. 
+   * holds: key, info, rank, parent, left, right.
+   * 
+   * constructor receives key and info, other params are set to null / 0
    */
   public class WAVLNode{
 	  
@@ -1079,6 +1081,7 @@ public class WAVLTree {
 	  /*
 	   * Complexity = O(1)
 	   */
+	  // TODO delete thissssss!!!
 	  public String toString(){
 		  return "(" + key + ":" + info + ")";
 	  }
@@ -1207,7 +1210,7 @@ public class WAVLTree {
 	  }
 	  
 	  /*
-	   * nulls all pointers to parent, right, left.
+	   * nulls all pointers - parent, right, left.
 	   * 
 	   * Complexity O(1)
 	   */
