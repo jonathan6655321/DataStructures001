@@ -368,7 +368,7 @@ public class WAVLTree {
    {
 	   // empty tree
 	   if (root == null){
-		   return -1;
+		   return -1; 
 	   }
 		  
 		
@@ -439,7 +439,6 @@ public class WAVLTree {
 					  successor.right = toBeDeleted;
 				  }  
 			  } else { // successor is a left child, not of toBeDeleted
-				  if (toBeDeleted.parent == null) {
 					  WAVLNode sucParent = successor.parent;
 					  WAVLNode toBeRight = toBeDeleted.right;
 					  
@@ -450,6 +449,8 @@ public class WAVLTree {
 						  } else {
 							  toBeDeleted.parent.right = successor;
 						  }
+					  } else {
+						  this.root = successor;						  
 					  }
 					  toBeDeleted.right = successor.right; // could be null
 					  if (successor.right != null){
@@ -461,8 +462,6 @@ public class WAVLTree {
 					  
 					  toBeDeleted.parent = sucParent;
 					  sucParent.left = toBeDeleted;
-					  this.root = successor;
-				  }  
 			  }
 	  }
 	
@@ -1014,14 +1013,14 @@ public class WAVLTree {
    /*
     * helper function for us do not check
     */
-   public static String toStringPreOrder(WAVLNode rootOfTree){
-	   return toStringPreOrderNode(rootOfTree);
+   public  String toStringPreOrder(){
+	   return toStringPreOrderNode(root);
    }
 
    /*
     * helper function for us do not check
     */
-   public static String toStringPreOrderNode(WAVLNode parent){
+   public String toStringPreOrderNode(WAVLNode parent){
 	   if (parent == null){
 	    return "";
 	   } else {

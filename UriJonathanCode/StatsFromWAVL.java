@@ -8,7 +8,7 @@ import javax.print.attribute.HashPrintServiceAttributeSet;
 public class StatsFromWAVL {
 	
 	private static final int SIZE = 10000;
-	private static final int MULTIPLE = 4;
+	private static final int MULTIPLE = 11;
 
 	public static void main(String[] args) {
 		
@@ -34,15 +34,22 @@ public class StatsFromWAVL {
 			
 //			System.out.println(tree.toStringPreOrder());
 			
-			int currentMinKey;
-			while (tree.getRoot() != null){
-//				if ( tree.getRoot().key >= 98){
-//					System.out.println(tree.toStringPreOrder());
-//				}
-				currentMinKey = tree.getMinKey();
-//				System.out.println(currentMinKey);
-				deleteOperationNum += tree.delete(currentMinKey);
+			
+			ArrayList<Integer> randomKeysDel = getRandomKeysArray(multiple);
+			
+			for(int i: randomKeysDel ){
+				deleteOperationNum += tree.delete(i);
 			}
+//			
+//			int currentMinKey;
+//			while (tree.getRoot() != null){
+////				if ( tree.getRoot().key >= 98){
+////					System.out.println(tree.toStringPreOrder());
+////				}
+//				currentMinKey = tree.getMinKey();
+////				System.out.println(currentMinKey);
+//				deleteOperationNum += tree.delete(currentMinKey);
+//			}
 			
 			System.out.println(tree.getRoot());
 			System.out.println("tree size after deletion is: " + tree.size());
