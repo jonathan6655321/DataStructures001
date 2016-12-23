@@ -205,7 +205,7 @@ public class WAVLTree {
 			   
 			   rotateRight(node,parent);
 			   parent.demote();
-			   return 2;
+			   return 1;
 		   } 
 		   
 		   // (2,1) below node - 2 rotations case:
@@ -216,14 +216,14 @@ public class WAVLTree {
 			   climberNode.left.demote();
 			   climberNode.right.demote();
 			   climberNode.promote();
-			   return 5;
+			   return 2;
 		   }
 	   } else {
 		   // (2,1) below node - 1 rotation case:
 		   if (rankDifference(node, node.right) == 1){
 			   rotateLeft(parent, node);
 			   parent.demote();
-			   return 2;
+			   return 1;
 		   } 
 		   // (1,2) below node - 2 rotations case: 
 		   else if (rankDifference(node, node.right) == 2 ) {
@@ -233,7 +233,7 @@ public class WAVLTree {
 			   climberNode.left.demote();
 			   climberNode.right.demote();
 			   climberNode.promote();
-			   return 5;
+			   return 2;
 		   }
 	   }
 	   
@@ -638,10 +638,10 @@ public class WAVLTree {
 			   
 			   if (parentNode.isLeaf() && parentNode.rank > 0) { // 2,2 leaf case.
 				   parentNode.demote();
-				   return 4;
+				   return 1;
 			   }
-			   
-			   return 3;			   
+			   	
+			   return 1;
 		   }
 	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
 		   // case 3 (right) - "Rotate":  parentNode is a (3,1) node and the R-D of the right child with the rightmost grandson is 1
@@ -653,10 +653,10 @@ public class WAVLTree {
 			   
 			   if (parentNode.isLeaf() && parentNode.rank > 0) { // 2,2 leaf case
 				   parentNode.demote();
-				   return 4;
+				   return 1;
 			   }
 			   
-			   return 3;
+			   return 1;
 		   }
 	   }
 	   
@@ -671,8 +671,8 @@ public class WAVLTree {
 			   climberNode.promote();
 			   leftChild.demote();
 			   parentNode.demote();
-			   parentNode.demote();
-			   return 7;	   
+			   parentNode.demote();	
+			   return 2;
 		   }
 	   } else if ((leftRankDiff==3) && (rightRankDiff==1)) {
 		   // case 4 (right) - "Double Rotate":  parentNode is a (3,1) node and the R-D of the right child with the rightmost grandson is 2
@@ -685,7 +685,7 @@ public class WAVLTree {
 			   rightChild.demote();
 			   parentNode.demote();
 			   parentNode.demote();
-			   return 7;			   
+			   return 2;
 		   }
 	   }   
 	   
