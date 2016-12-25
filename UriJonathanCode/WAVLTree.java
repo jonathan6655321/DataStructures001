@@ -271,7 +271,6 @@ public class WAVLTree {
     * constant number of operations.
     */
    public void rotateRight(WAVLNode child, WAVLNode parent) {
-//	  System.out.println("I am rotating right!");
 	   
 	   if(root == parent) {
 		   child.parent = null;
@@ -304,9 +303,6 @@ public class WAVLTree {
     * constant number of operations.
     */
    public void rotateLeft(WAVLNode parent, WAVLNode child){
-	  
-//	   System.out.println("I am rotating left!");
-	   
 	   if(root == parent) {
 		   child.parent = null;
 		   root = child;
@@ -365,7 +361,6 @@ public class WAVLTree {
    {
 	   // empty tree
 	   if (root == null){
-		   System.out.println("aaaa");
 		   return -1; 
 	   }
 		  
@@ -375,7 +370,6 @@ public class WAVLTree {
 	  
 	  // there is no node with the key k
 	  if (toBeDeleted.key != k){
-		  System.out.println("bbbb");
 		  return -1;
 	  }
 	  
@@ -839,7 +833,7 @@ public class WAVLTree {
   public WAVLNode successorOf(WAVLNode node){
 	  
 	  if (node == this.maxNode){
-		  return null; // TODO did this do something wrong? 
+		  return null; 
 	  }
 	  
 	  WAVLNode successor = node;
@@ -881,7 +875,7 @@ public class WAVLTree {
   public WAVLNode predOf(WAVLNode node){
 	  
 	  if (node == this.minNode){
-		  return null; // TODO
+		  return null;
 	  }
 	  
 	  WAVLNode pred = node;
@@ -1005,55 +999,16 @@ public class WAVLTree {
 	   return this.root;
    }
 
-   // TODO delete this
+   /*
+    * helper function for us
+    * 
+    * Complexity = O(1)
+    */
    public int getMinKey(){   
 	   return this.minNode.key;
    }
    
-   // TODO delete all of these!!!
-   
-   /*
-    * helper function for us do not check 
-    */
-   public  String toStringPreOrder(){
-	   return toStringPreOrderNode(root);
-   }
 
-   /*
-    * helper function for us do not check
-    */
-   public String toStringPreOrderNode(WAVLNode parent){
-	   if (parent == null){
-	    return "";
-	   } else {
-	    return parent.toString() + " " + toStringPreOrderNode(parent.left) + toStringPreOrderNode(parent.right);
-	   }
-   }
-   
-   /*
-    * helper function for us do not check
-    */
-	public static boolean hasValidRanks(WAVLNode currentRoot){
-		
-		if (currentRoot == null){
-			return true;
-		}
-		
-		if (currentRoot.isLeaf()){
-			if (rankDifference(currentRoot,currentRoot.left) == 1 && rankDifference(currentRoot,currentRoot.right) == 1 ){
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			if(rankDifference(currentRoot,currentRoot.left) > 2 || rankDifference(currentRoot,currentRoot.right) > 2 ){
-				return false;
-			}
-		}
-		
-		return hasValidRanks(currentRoot.left) && hasValidRanks(currentRoot.right);
-	}
-   
    
   /**
    * public class WAVLNode
@@ -1102,7 +1057,6 @@ public class WAVLTree {
 	   * in total O(log n) calls. 
 	   */
 	  public WAVLNode nodeSearch(int key){
-//		  System.out.println("Searching for "+key+", current node: "+this.key);
 		  
 		  if (key == this.key) {
 			  return this;

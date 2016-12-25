@@ -13,7 +13,7 @@ public class StatsFromWAVL {
 	private static final int SIZE = 10000;
 	private static final int MULTIPLE = 11;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		double deleteOperationNum;
 		double insertOperationNum;
@@ -35,11 +35,15 @@ public class StatsFromWAVL {
 			ArrayList<Integer> randomKeys = getRandomKeysArray(multiple);
 			
 			for(int i: randomKeys ){
+//				if (! WAVLTree.isValidTree(tree.getRoot())){
+//					throw new Exception();
+//				}
 				temp = tree.insert(i, Integer.toString(i));
 				if ( temp > maxInsertOps){
 					maxInsertOps = temp;
 				}
 				insertOperationNum += temp;
+				
 			}
 			
 //			System.out.println("minNode is leaf"  + tree.minNode.isLeaf());
@@ -52,14 +56,20 @@ public class StatsFromWAVL {
 //			
 //			
 			
+//			tree.getRoot().left.left.right.key = 20000;
+			
 //			ArrayList<Integer> randomKeysDel = getRandomKeysArray(multiple);
-//			
+////			
 //			for(int i: randomKeysDel ){
+//				if (! WAVLTree.isValidTree(tree.getRoot())){
+//					throw new Exception();
+//				}
 //				temp = tree.delete(i);
 //				if ( temp > maxDeleteOps){
 //					maxDeleteOps = temp;
 //				}
 //				deleteOperationNum += temp;
+//				
 //			}
 //			
 //			int[] array = new int[multiple*SIZE];
@@ -81,8 +91,8 @@ public class StatsFromWAVL {
 				deleteOperationNum += temp;
 			}
 			
-//			System.out.println(tree.getRoot());
-//			System.out.println("tree size after deletion is: " + tree.size());
+			System.out.println(tree.getRoot());
+			System.out.println("tree size after deletion is: " + tree.size());
 //			System.out.println(deleteOperationNum + " is num of delete operations  for tree of size: " + multiple*SIZE);
 //			System.out.println(deleteOperationNum/(SIZE*multiple) + " is num of AVERAGE delete operations  for tree of size: " + multiple*SIZE);
 //			System.out.println(maxDeleteOps  + " is the MAX num of insert operations for tree of size: " + multiple*SIZE);
@@ -90,7 +100,7 @@ public class StatsFromWAVL {
 //			System.out.println(multiple + ".  tree size " + SIZE*multiple + ": average insert ops: " + insertOperationNum/(SIZE*multiple) + " max insert ops: " + maxInsertOps + " average delete ops: " + deleteOperationNum/(SIZE*multiple) + " max delete ops" + maxDeleteOps);
 			System.out.println(multiple + "," + SIZE*multiple + "," + insertOperationNum/(SIZE*multiple) + "," + maxInsertOps + "," + deleteOperationNum/(SIZE*multiple) + "," + maxDeleteOps);
 //			System.out.println("");
-//			System.out.println("=================== " + SIZE*multiple + " case done ======================");
+			System.out.println("=================== " + SIZE*multiple + " case done ======================");
 //			System.out.println("");
 		}
 		
