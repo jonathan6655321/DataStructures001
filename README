@@ -1,0 +1,12 @@
+This is an Implementation of a WAVL Tree by Jonathan Somer and Uri Shaham
+
+https://en.wikipedia.org/wiki/WAVL_tree
+
+This Implementation was done as an undergraduate project in the Tel Aviv University Computer Science department.
+The project received an A+. 
+
+Complexity of the different functions is described in the code. 
+
+<b> WAVLTree.java </b> is the file of the implementation. 
+
+other files include testers and such. 
